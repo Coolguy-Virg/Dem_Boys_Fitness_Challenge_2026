@@ -58,7 +58,7 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 #voter-screen{background:#0a0a0a;padding:1.5rem 1.25rem;}
 .screen-title{font-size:38px;color:#f0ece4;line-height:1;margin-bottom:0.3rem;}
 .screen-sub{font-size:13px;color:rgba(240,236,228,0.4);margin-bottom:1.5rem;}
-.voter-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.25rem;}
+.voter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;}
 .voter-btn{background:#161616;border:1px solid rgba(240,236,228,0.1);color:#f0ece4;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:18px 8px;border-radius:8px;cursor:pointer;transition:border-color 0.15s,background 0.15s;text-align:center;touch-action:manipulation;}
 .voter-btn:active{transform:scale(0.97);}
 .voter-btn.selected{border-color:#f5c842;background:rgba(245,200,66,0.08);color:#f5c842;}
@@ -143,16 +143,60 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 </head>
 <body>
 
-<!-- ADMIN SCREEN -->
-<div id="admin-screen" class="screen">
-  <div class="admin-header">
-    <div class="admin-badge">Organizer Mode</div>
-    <h1 class="admin-title bebas">Pre-Load Photos</h1>
-    <p class="admin-sub">Upload before & current photos for each competitor</p>
+<!-- ORGANIZER LOGIN SCREEN -->
+<div id="organizer-login-screen" class="screen" style="background:#0a0a0a;padding:1.5rem 1.25rem;justify-content:center;align-items:center;min-height:100vh;">
+  <div style="width:100%;max-width:360px;">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div class="admin-badge">Organizer Access</div>
+      <h1 class="admin-title bebas" style="font-size:42px;">Welcome Back</h1>
+      <p class="admin-sub">Sign in to manage the challenge</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:1.25rem;">
+      <div>
+        <label style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.4);display:block;margin-bottom:6px;">Username</label>
+        <input id="org-username" type="text" placeholder="Organizer" autocomplete="off" autocorrect="off" autocapitalize="off"
+          style="width:100%;background:#161616;border:1px solid rgba(240,236,228,0.15);border-radius:8px;padding:14px 16px;color:#f0ece4;font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='rgba(245,200,66,0.5)'" onblur="this.style.borderColor='rgba(240,236,228,0.15)'"
+          onkeydown="if(event.key==='Enter')document.getElementById('org-pin').focus()">
+      </div>
+      <div>
+        <label style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.4);display:block;margin-bottom:6px;">PIN</label>
+        <input id="org-pin" type="password" inputmode="numeric" placeholder="••••" maxlength="4"
+          style="width:100%;background:#161616;border:1px solid rgba(240,236,228,0.15);border-radius:8px;padding:14px 16px;color:#f0ece4;font-family:'DM Sans',sans-serif;font-size:22px;letter-spacing:0.3em;outline:none;transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='rgba(245,200,66,0.5)'" onblur="this.style.borderColor='rgba(240,236,228,0.15)'"
+          onkeydown="if(event.key==='Enter')orgLogin()">
+      </div>
+    </div>
+    <p id="org-error" style="color:#ff6b6b;font-size:13px;text-align:center;margin-bottom:1rem;display:none;">Incorrect username or PIN. Try again.</p>
+    <button onclick="orgLogin()" style="width:100%;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px;border-radius:6px;cursor:pointer;transition:transform 0.15s;" ontouchstart="" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform=''" >Sign In</button>
+    <button onclick="goTo('intro-screen')" style="width:100%;margin-top:10px;background:transparent;color:rgba(240,236,228,0.3);border:1px solid rgba(240,236,228,0.08);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px;border-radius:6px;cursor:pointer;">← Back</button>
   </div>
+</div>
+
+<!-- ORGANIZER DASHBOARD -->
+<div id="admin-screen" class="screen" style="background:#0a0a0a;padding:1.5rem 1.25rem;">
+  <div class="admin-header" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;">
+    <div>
+      <div class="admin-badge">Organizer Dashboard</div>
+      <h1 class="admin-title bebas">Control Panel</h1>
+      <p class="admin-sub">Upload photos &amp; manage the challenge</p>
+    </div>
+    <button onclick="orgLogout()" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;margin-top:4px;">Sign Out</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem;">
+    <button onclick="goTo('intro-screen')" style="background:#161616;border:1px solid rgba(240,236,228,0.1);color:#f0ece4;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.08em;padding:16px 10px;border-radius:8px;cursor:pointer;text-align:center;">🗳 View Voting</button>
+    <button onclick="orgRevealResults()" style="background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);color:#f5c842;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.08em;padding:16px 10px;border-radius:8px;cursor:pointer;text-align:center;">🏆 Reveal Winner</button>
+  </div>
+
+  <div style="background:#161616;border:1px solid rgba(240,236,228,0.07);border-radius:10px;padding:12px;margin-bottom:1.25rem;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.35);margin-bottom:8px;">Vote Progress</p>
+    <div id="admin-vote-progress" style="display:flex;flex-direction:column;gap:5px;"></div>
+  </div>
+
+  <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.35);margin-bottom:10px;">Competitor Photos</p>
   <div class="competitor-admin-list" id="admin-list"></div>
-  <button class="btn-admin-done" onclick="finishAdmin()">Done — Launch Voting App</button>
-  <button class="admin-skip" onclick="skipAdmin()">Skip — No Photos</button>
+  <button class="btn-admin-done" onclick="finishAdmin()">Save &amp; Go to Voting App</button>
 </div>
 
 <!-- INTRO SCREEN -->
@@ -164,16 +208,21 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <p class="intro-dates">Body Transformation · 6 Competitors</p>
     <div class="fire-row">🔥💪🔥</div>
     <button class="btn-cta" onclick="goTo('voter-screen')">Begin Voting</button>
-    <span class="admin-link" onclick="goTo('admin-screen')">Organizer: pre-load photos</span>
+    <span class="admin-link" onclick="goTo('organizer-login-screen')">Organizer Login</span>
   </div>
 </div>
 
 <!-- VOTER SELECT SCREEN -->
 <div id="voter-screen" class="screen" style="padding:1.5rem 1.25rem;">
   <h2 class="screen-title bebas">Who Are You?</h2>
-  <p class="screen-sub">Pick your voter ID — all votes are anonymous</p>
+  <p class="screen-sub">Pick your name — all votes are anonymous</p>
+  <p id="voter-tally" style="font-size:12px;color:rgba(240,236,228,0.35);margin-bottom:1rem;letter-spacing:0.1em;">0 of 6 voters done</p>
   <div class="voter-grid" id="voter-grid"></div>
   <button class="btn-confirm" id="voter-confirm-btn" disabled onclick="startVoting()">Lock In &amp; Start Voting</button>
+  <div style="margin-top:1.5rem;border-top:1px solid rgba(240,236,228,0.07);padding-top:1.25rem;">
+    <p style="font-size:11px;color:rgba(240,236,228,0.2);text-align:center;margin-bottom:0.75rem;letter-spacing:0.1em;text-transform:uppercase;">Organizer Only</p>
+    <button onclick="goTo('organizer-login-screen')" style="width:100%;background:transparent;color:rgba(245,200,66,0.5);border:1px solid rgba(245,200,66,0.2);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;padding:13px;border-radius:6px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.color='#f5c842';this.style.borderColor='rgba(245,200,66,0.5)'" onmouseout="this.style.color='rgba(245,200,66,0.5)';this.style.borderColor='rgba(245,200,66,0.2)'">🏆 Organizer Login</button>
+  </div>
 </div>
 
 <!-- VOTE SCREEN -->
@@ -240,7 +289,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 <script>
 const COMPETITORS = ['Ram','Wuttke','Kiska','Bhav','Virgil','Soss'];
-const TOTAL_VOTERS = 6;
+const VOTERS = ['Christina','Grace','Brigith','Somby','Astha','Prachi'];
+const TOTAL_VOTERS = VOTERS.length;
+const ORGANIZER_USERNAME = 'Organizer';
+const ORGANIZER_PIN = '0423';
 
 let photos = {};
 let votes = {};
@@ -289,27 +341,28 @@ function adminLoadImg(input, comp, type){
 }
 
 function finishAdmin(){ goTo('intro-screen'); }
-function skipAdmin(){ goTo('intro-screen'); }
 
 /* ---- VOTER SELECT ---- */
 function buildVoterGrid(){
   const grid = document.getElementById('voter-grid');
   grid.innerHTML = '';
-  for(let i=1;i<=TOTAL_VOTERS;i++){
-    const v='Voter '+i;
+  VOTERS.forEach(v=>{
     const done = votes[v] !== undefined;
     const btn = document.createElement('button');
     btn.className = 'voter-btn'+(done?' selected':'');
-    btn.textContent = done ? v+' ✓' : v;
-    btn.disabled = done;
+    btn.innerHTML = done ? v+'<br><span style="font-size:10px;opacity:0.7">✓ voted</span>' : v;
     btn.onclick = ()=>{
+      if(done){ alert(v+' has already voted!'); return; }
       document.querySelectorAll('.voter-btn').forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
       currentVoter = v;
       document.getElementById('voter-confirm-btn').disabled = false;
     };
     grid.appendChild(btn);
-  }
+  });
+  const totalVotes = Object.keys(votes).length;
+  const tally = document.getElementById('voter-tally');
+  if(tally) tally.textContent = totalVotes + ' of ' + TOTAL_VOTERS + ' voters done';
   document.getElementById('voter-confirm-btn').disabled = true;
   currentVoter = null;
 }
@@ -386,11 +439,7 @@ function submitVote(){
 /* ---- HANDOFF ---- */
 function showHandoff(){
   const doneSoFar = Object.keys(votes).length;
-  const allDone = doneSoFar >= TOTAL_VOTERS;
-
-  document.getElementById('handoff-sub').textContent = allDone
-    ? 'All votes are in. Time to crown the champion!'
-    : 'Scores saved! Pass the phone to the next voter.';
+  document.getElementById('handoff-sub').textContent = 'Your scores have been saved. Anyone else can vote now — or wait for more voters before revealing results.';
   document.getElementById('tally-text').innerHTML =
     `<span>${doneSoFar}</span> of <span>${TOTAL_VOTERS}</span> voters done`;
 
@@ -405,13 +454,8 @@ function showHandoff(){
   });
 
   const cta = document.getElementById('handoff-cta');
-  if(allDone){
-    cta.textContent = '🏆 Reveal Results';
-    cta.onclick = showResults;
-  } else {
-    cta.textContent = 'Next Voter';
-    cta.onclick = nextVoter;
-  }
+  cta.textContent = 'Next Voter';
+  cta.onclick = nextVoter;
   goTo('handoff-screen');
 }
 
@@ -480,6 +524,65 @@ function launchConfetti(){
     `;
     wrap.appendChild(p);
   }
+}
+
+function orgLogin(){
+  const user = document.getElementById('org-username').value.trim();
+  const pin = document.getElementById('org-pin').value.trim();
+  const err = document.getElementById('org-error');
+  if(user === ORGANIZER_USERNAME && pin === ORGANIZER_PIN){
+    err.style.display = 'none';
+    document.getElementById('org-username').value = '';
+    document.getElementById('org-pin').value = '';
+    buildAdminDashboard();
+    goTo('admin-screen');
+  } else {
+    err.style.display = 'block';
+    document.getElementById('org-pin').value = '';
+  }
+}
+
+function orgLogout(){
+  goTo('intro-screen');
+}
+
+function buildAdminDashboard(){
+  const prog = document.getElementById('admin-vote-progress');
+  prog.innerHTML = '';
+  VOTERS.forEach(v=>{
+    const done = votes[v] !== undefined;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:4px 0;';
+    row.innerHTML = `<span style="font-size:14px;color:${done?'#f0ece4':'rgba(240,236,228,0.35)'}">${v}</span>
+      <span style="font-size:12px;${done?'color:#f5c842;font-weight:600;':'color:rgba(240,236,228,0.25);'}">${done?'✓ Voted':'Pending'}</span>`;
+    prog.appendChild(row);
+  });
+  const total = Object.keys(votes).length;
+  const bar = document.createElement('div');
+  bar.style.cssText = 'margin-top:8px;background:rgba(240,236,228,0.08);border-radius:2px;height:3px;overflow:hidden;';
+  bar.innerHTML = `<div style="height:100%;width:${total/TOTAL_VOTERS*100}%;background:#f5c842;border-radius:2px;transition:width 0.4s;"></div>`;
+  prog.appendChild(bar);
+  const lbl = document.createElement('p');
+  lbl.style.cssText = 'font-size:11px;color:rgba(240,236,228,0.3);margin-top:5px;text-align:right;';
+  lbl.textContent = total + ' of ' + TOTAL_VOTERS + ' voted';
+  prog.appendChild(lbl);
+}
+
+function orgRevealResults(){
+  const doneSoFar = Object.keys(votes).length;
+  if(doneSoFar === 0){
+    alert('No votes have been submitted yet!');
+    return;
+  }
+  if(doneSoFar < TOTAL_VOTERS){
+    const go = confirm(`Only ${doneSoFar} of ${TOTAL_VOTERS} voters have voted. Reveal results anyway?`);
+    if(!go) return;
+  }
+  showResults();
+}
+
+function promptReveal(){
+  goTo('organizer-login-screen');
 }
 
 function resetApp(){
