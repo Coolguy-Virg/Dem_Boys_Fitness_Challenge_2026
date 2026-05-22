@@ -14,6 +14,18 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
 #loading-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;}
+.bicep-loader{font-size:48px;display:block;margin:0 auto 1rem;animation:bicepCurl 0.6s steps(8) infinite;}
+@keyframes bicepCurl{
+  0%  {transform:rotate(0deg)   scale(1);}
+  12% {transform:rotate(45deg)  scale(1.05);}
+  25% {transform:rotate(90deg)  scale(1.1);}
+  37% {transform:rotate(135deg) scale(1.15);}
+  50% {transform:rotate(180deg) scale(1.2);}
+  62% {transform:rotate(135deg) scale(1.15);}
+  75% {transform:rotate(90deg)  scale(1.1);}
+  87% {transform:rotate(45deg)  scale(1.05);}
+  100%{transform:rotate(0deg)   scale(1);}
+}
 .spinner{width:36px;height:36px;border:3px solid rgba(245,200,66,0.2);border-top-color:#f5c842;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
 #intro-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;position:relative;}
@@ -72,16 +84,24 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .org-section{margin-top:1.5rem;border-top:1px solid rgba(240,236,228,0.07);padding-top:1.25rem;text-align:center;}
 .org-label{font-size:11px;color:rgba(240,236,228,0.2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;}
 .btn-org{width:100%;background:transparent;color:rgba(245,200,66,0.5);border:1px solid rgba(245,200,66,0.2);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;padding:13px;border-radius:6px;cursor:pointer;touch-action:manipulation;}
+.btn-spectator{width:100%;background:transparent;color:rgba(240,236,228,0.3);border:1px solid rgba(240,236,228,0.1);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px;border-radius:6px;cursor:pointer;touch-action:manipulation;transition:color 0.15s,border-color 0.15s;}
+.btn-spectator:hover{color:rgba(240,236,228,0.6);border-color:rgba(240,236,228,0.25);}
 #vote-screen{background:#0a0a0a;padding:1.25rem 1.25rem 2rem;}
 .progress-wrap{background:rgba(240,236,228,0.08);border-radius:2px;height:3px;margin-bottom:1.25rem;overflow:hidden;}
 .progress-fill{height:100%;background:#f5c842;border-radius:2px;transition:width 0.4s ease;}
 .vote-meta{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,236,228,0.35);margin-bottom:0.3rem;}
 .vote-name{font-size:clamp(42px,12vw,60px);color:#f0ece4;line-height:1;margin-bottom:1.1rem;}
-.photos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem;}
-.photo-card{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:#161616;border:1px solid rgba(240,236,228,0.08);}
+.photos-strip-wrap{position:relative;margin-bottom:1rem;}
+.photos-strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none;}
+.photos-strip::-webkit-scrollbar{display:none;}
+.photo-card{position:relative;border-radius:10px;overflow:hidden;flex:0 0 78vw;max-width:300px;aspect-ratio:3/4;background:#161616;border:1px solid rgba(240,236,228,0.08);scroll-snap-align:start;}
 .photo-card img{width:100%;height:100%;object-fit:cover;display:block;}
-.photo-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:20px 8px 7px;text-align:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.7);}
-.photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:rgba(240,236,228,0.2);font-size:11px;}
+.photo-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:24px 12px 10px;text-align:center;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(240,236,228,0.85);}
+.photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:rgba(240,236,228,0.2);font-size:12px;}
+.photos-dots{display:flex;justify-content:center;gap:7px;margin:8px 0 10px;}
+.photos-dot{width:7px;height:7px;border-radius:50%;background:rgba(240,236,228,0.15);transition:background 0.25s,transform 0.25s;}
+.photos-dot.active{background:#f5c842;transform:scale(1.2);}
+.swipe-hint{text-align:center;font-size:11px;color:rgba(240,236,228,0.2);letter-spacing:0.06em;margin-bottom:4px;}
 .rating-block{margin-bottom:1.25rem;}
 .rating-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0.6rem;}
 .rating-label{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.4);}
@@ -132,7 +152,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 <body>
 
 <div id="loading-screen" class="screen active">
-  <div><div class="spinner"></div><p style="color:rgba(240,236,228,0.4);font-size:14px;">Loading...</p></div>
+  <div><span class="bicep-loader">💪</span><p style="color:rgba(240,236,228,0.4);font-size:14px;letter-spacing:0.1em;">Loading...</p></div>
 </div>
 
 <div id="intro-screen" class="screen">
@@ -185,6 +205,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <span class="section-label">Competitor Photos</span>
     <div id="admin-list"></div>
     <button class="btn-admin-save" onclick="goTo('intro-screen')">Done — Go to Voting App</button>
+    <button onclick="orgResetVotes()" style="width:100%;margin-top:10px;background:transparent;color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px;border-radius:6px;cursor:pointer;touch-action:manipulation;">🗑 Reset All Votes & Photos</button>
   </div>
 </div>
 
@@ -199,6 +220,33 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       <p class="org-label">Organizer Only</p>
       <button class="btn-org" onclick="goTo('organizer-login-screen')">🏆 Organizer Login</button>
     </div>
+    <div style="margin-top:12px;text-align:center;">
+      <button class="btn-spectator" onclick="goSpectator()">👀 Watch Live — Spectator View</button>
+    </div>
+  </div>
+</div>
+
+<div id="spectator-screen" class="screen">
+  <div style="padding:1.5rem 1.25rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div>
+        <div class="admin-badge">Live View</div>
+        <h1 class="bebas" style="font-size:36px;line-height:1;">Spectator Mode</h1>
+      </div>
+      <button onclick="goTo('intro-screen')" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">← Back</button>
+    </div>
+    <div style="background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.15);border-radius:10px;padding:12px 14px;margin-bottom:1.5rem;font-size:13px;color:rgba(240,236,228,0.5);line-height:1.6;">
+      👀 You are in <strong style="color:#f5c842;">read-only</strong> mode. You can see vote progress but cannot cast votes.
+    </div>
+    <div class="progress-card" style="margin-bottom:1.25rem;">
+      <span class="section-label">Vote Progress</span>
+      <div id="spectator-vote-progress"></div>
+    </div>
+    <div style="background:#161616;border:1px solid rgba(240,236,228,0.07);border-radius:10px;padding:14px;margin-bottom:1.25rem;">
+      <span class="section-label">Competitors</span>
+      <div id="spectator-competitors"></div>
+    </div>
+    <button onclick="goSpectator()" style="width:100%;background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.35);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px;border-radius:6px;cursor:pointer;">↻ Refresh</button>
   </div>
 </div>
 
@@ -209,7 +257,14 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <h2 class="vote-name bebas" id="comp-name">—</h2>
   </div>
   <div style="padding:0 1.25rem;">
-    <div class="photos-grid" id="photos-grid"></div>
+    <div class="photos-strip-wrap">
+      <p class="swipe-hint">← swipe to see before &amp; current →</p>
+      <div class="photos-strip" id="photos-grid"></div>
+      <div class="photos-dots" id="photos-dots">
+        <div class="photos-dot active"></div>
+        <div class="photos-dot"></div>
+      </div>
+    </div>
     <div class="rating-block">
       <div class="rating-top">
         <span class="rating-label">Transformation Score</span>
@@ -229,12 +284,14 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 <div id="handoff-screen" class="screen">
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:2rem 1.5rem;text-align:center;">
-    <div style="font-size:56px;color:#f5c842;margin-bottom:1rem;">✅</div>
-    <h2 class="bebas" style="font-size:46px;margin-bottom:0.5rem;">Votes Locked!</h2>
-    <p style="font-size:14px;color:rgba(240,236,228,0.45);margin-bottom:1.75rem;max-width:300px;line-height:1.6;">Scores saved! Anyone else can vote on their own device.</p>
-    <p class="tally-text" id="tally-text" style="font-size:13px;color:rgba(240,236,228,0.3);margin-bottom:2rem;"></p>
-    <div class="vote-summary" id="vote-summary"></div>
-    <button class="btn-cta" onclick="goTo('intro-screen')">Back to Home</button>
+    <div style="font-size:64px;margin-bottom:0.5rem;animation:bounceIn 0.5s ease;">💪</div>
+    <div style="font-size:28px;margin-bottom:1rem;">✅</div>
+    <h2 class="bebas" style="font-size:48px;color:#f5c842;margin-bottom:0.4rem;">Thank You!</h2>
+    <p class="bebas" style="font-size:22px;color:rgba(240,236,228,0.6);margin-bottom:1.5rem;" id="handoff-voter-name"></p>
+    <p style="font-size:14px;color:rgba(240,236,228,0.4);margin-bottom:0.5rem;max-width:300px;line-height:1.6;">Your votes have been saved. The organizer will reveal the winner when all votes are in.</p>
+    <p class="tally-text" id="tally-text" style="font-size:13px;color:rgba(240,236,228,0.35);margin-bottom:1.5rem;"></p>
+    <div class="vote-summary" id="vote-summary" style="margin-bottom:1.5rem;"></div>
+    <button class="btn-cta" onclick="goVoter()">👀 Back to Lobby</button>
   </div>
 </div>
 
@@ -327,6 +384,10 @@ async function saveVoterVotes(voter,votesObj){
   await binSet(VOTES_BIN_ID,all);
 }
 
+function realVoteCount(voteData){
+  return Object.keys(voteData).filter(k=>k!=='__winner_revealed__'&&k!=='init').length;
+}
+
 // ── INIT ──
 async function init(){
   // Check if bins are configured
@@ -346,15 +407,48 @@ async function goVoter(){
   goTo('loading-screen');
   await fetchVotes();
   await fetchPhotos();
+  // check if winner already revealed
+  if(cachedVotes['__winner_revealed__']===true){
+    showResults();
+    return;
+  }
   renderVoterGrid();
   goTo('voter-screen');
+  startLobbyPoll();
 }
 window.goVoter=goVoter;
+
+let lobbyPollTimer=null;
+function startLobbyPoll(){
+  if(lobbyPollTimer)clearInterval(lobbyPollTimer);
+  lobbyPollTimer=setInterval(async()=>{
+    if(!document.getElementById('voter-screen').classList.contains('active'))return;
+    try{
+      const data=await binGet(VOTES_BIN_ID)||{};
+      cachedVotes=data;
+      if(data['__winner_revealed__']===true){
+        clearInterval(lobbyPollTimer);
+        showResults();
+        return;
+      }
+      const done=Object.keys(data).filter(k=>k!=='__winner_revealed__'&&k!=='init').length;
+      document.getElementById('tally-num').textContent=done;
+      // refresh voted states
+      document.querySelectorAll('.voter-btn').forEach(btn=>{
+        const name=btn.textContent.split('
+')[0].trim();
+        const voted=data[name]!==undefined;
+        if(voted&&!btn.classList.contains('voted')){btn.classList.add('voted');btn.innerHTML=name+'<br><span style="font-size:10px;opacity:0.6;">✓ voted</span>';}
+      });
+    }catch(e){}
+  },8000);
+}
 
 function renderVoterGrid(){
   const grid=document.getElementById('voter-grid');
   grid.innerHTML='';
-  const done=Object.keys(cachedVotes).length;
+  const allVotes=Object.entries(cachedVotes).filter(([k])=>k!=='__winner_revealed__'&&k!=='init');
+  const done=allVotes.length;
   document.getElementById('tally-num').textContent=done;
   currentVoter=null;
   document.getElementById('voter-confirm-btn').disabled=true;
@@ -402,7 +496,7 @@ function loadCompetitor(){
   updateSlider(5);
   const grid=document.getElementById('photos-grid');
   grid.innerHTML='';
-  ['before','after'].forEach(type=>{
+  ['before','after'].forEach((type,i)=>{
     const card=document.createElement('div');
     card.className='photo-card';
     const url=cachedPhotos[comp]&&cachedPhotos[comp][type];
@@ -413,7 +507,7 @@ function loadCompetitor(){
     }else{
       const ph=document.createElement('div');
       ph.className='photo-placeholder';
-      ph.innerHTML=`<span style="font-size:26px;opacity:0.3;">📷</span><span>${type==='before'?'Before':'Current'}</span>`;
+      ph.innerHTML=`<span style="font-size:40px;opacity:0.15;">📷</span><span style="font-size:13px;">${type==='before'?'Before photo not uploaded':'Current photo not uploaded'}</span>`;
       card.appendChild(ph);
     }
     const lbl=document.createElement('div');
@@ -422,6 +516,13 @@ function loadCompetitor(){
     card.appendChild(lbl);
     grid.appendChild(card);
   });
+  // dot indicator sync
+  const strip=grid;
+  const dots=document.querySelectorAll('.photos-dot');
+  strip.addEventListener('scroll',()=>{
+    const idx=Math.round(strip.scrollLeft/(strip.scrollWidth/2));
+    dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+  },{passive:true});
 }
 
 // ── SUBMIT VOTE ──
@@ -456,7 +557,9 @@ window.submitVote=submitVote;
 
 // ── HANDOFF ──
 function showHandoff(){
-  const done=Object.keys(cachedVotes).length;
+  const done=realVoteCount(cachedVotes);
+  const nameEl=document.getElementById('handoff-voter-name');
+  if(nameEl) nameEl.textContent=currentVoter ? currentVoter+''s votes are in!' : '';
   document.getElementById('tally-text').innerHTML=
     `<span>${done}</span> of <span>${VOTERS.length}</span> voters done`;
   const summary=document.getElementById('vote-summary');
@@ -507,7 +610,7 @@ function renderAdminProgress(){
       <span style="font-size:12px;${done?'color:#f5c842;font-weight:600;':'color:rgba(240,236,228,0.25);'}">${done?'✓ Voted':'Pending'}</span>`;
     prog.appendChild(row);
   });
-  const total=Object.keys(cachedVotes).length;
+  const total=realVoteCount(cachedVotes);
   prog.innerHTML+=`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${total/VOTERS.length*100}%"></div></div>
     <p style="font-size:11px;color:rgba(240,236,228,0.3);margin-top:5px;text-align:right;">${total} of ${VOTERS.length} voted</p>`;
 }
@@ -522,22 +625,52 @@ window.refreshAdmin=refreshAdmin;
 async function orgRevealResults(){
   goTo('loading-screen');
   await fetchVotes();
-  const done=Object.keys(cachedVotes).length;
+  const done=realVoteCount(cachedVotes);
   if(done===0){showToast('No votes yet!');goTo('admin-screen');return;}
   if(done<VOTERS.length){
     const go=confirm(`Only ${done} of ${VOTERS.length} voted. Reveal anyway?`);
     if(!go){goTo('admin-screen');return;}
   }
+  // publish winner flag so lobby checkers see it
+  try{
+    const existing=await binGet(VOTES_BIN_ID)||{};
+    existing['__winner_revealed__']=true;
+    await binSet(VOTES_BIN_ID,existing);
+  }catch(e){console.warn('Could not set winner flag',e);}
   showResults();
 }
 window.orgRevealResults=orgRevealResults;
+
+async function orgResetVotes(){
+  const confirmed=confirm('⚠️ This will DELETE all votes and reset the entire challenge. Are you sure?');
+  if(!confirmed)return;
+  const doubleConfirm=confirm('Last chance — this cannot be undone. Reset everything?');
+  if(!doubleConfirm)return;
+  goTo('loading-screen');
+  try{
+    await binSet(VOTES_BIN_ID,{'init':true});
+    await binSet(PHOTOS_BIN_ID,{'init':true});
+    cachedVotes={};
+    cachedPhotos={};
+    buildAdminList();
+    showToast('✓ All votes & photos reset!');
+    renderAdminProgress();
+    goTo('admin-screen');
+  }catch(e){
+    showToast('Reset failed. Try again.');
+    goTo('admin-screen');
+    console.error(e);
+  }
+}
+window.orgResetVotes=orgResetVotes;
 
 // ── RESULTS ──
 function showResults(){
   const totals={},counts={};
   COMPETITORS.forEach(c=>{totals[c]=0;counts[c]=0;});
-  Object.values(cachedVotes).forEach(vv=>{
-    Object.entries(vv).forEach(([c,s])=>{totals[c]+=s;counts[c]++;});
+  Object.entries(cachedVotes).forEach(([voter,vv])=>{
+    if(voter==='__winner_revealed__'||voter==='init')return;
+    Object.entries(vv).forEach(([c,s])=>{if(typeof s==='number'){totals[c]+=s;counts[c]++;}});
   });
   const ranked=COMPETITORS.map(c=>({
     name:c,
@@ -647,6 +780,47 @@ async function adminUpload(input,comp,type){
   reader.readAsDataURL(input.files[0]);
 }
 window.adminUpload=adminUpload;
+
+async function goSpectator(){
+  goTo('loading-screen');
+  await fetchVotes();
+  renderSpectatorProgress();
+  goTo('spectator-screen');
+}
+window.goSpectator=goSpectator;
+
+function renderSpectatorProgress(){
+  // Vote progress per voter
+  const prog=document.getElementById('spectator-vote-progress');
+  if(!prog)return;
+  prog.innerHTML='';
+  VOTERS.forEach(v=>{
+    const done=cachedVotes[v]!==undefined;
+    const row=document.createElement('div');
+    row.className='voter-progress-row';
+    row.innerHTML=`<span style="font-size:14px;color:${done?'#f0ece4':'rgba(240,236,228,0.4)'};">${v}</span>
+      <span style="font-size:12px;${done?'color:#f5c842;font-weight:600;':'color:rgba(240,236,228,0.25);'}">${done?'✓ Voted':'Pending'}</span>`;
+    prog.appendChild(row);
+  });
+  const total=realVoteCount(cachedVotes);
+  prog.innerHTML+=`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${total/VOTERS.length*100}%"></div></div>
+    <p style="font-size:11px;color:rgba(240,236,228,0.3);margin-top:6px;text-align:right;">${total} of ${VOTERS.length} voted</p>`;
+
+  // Competitor list (no scores shown — just names)
+  const compEl=document.getElementById('spectator-competitors');
+  if(!compEl)return;
+  compEl.innerHTML='';
+  COMPETITORS.forEach((c,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(240,236,228,0.06);';
+    // count how many have voted for this competitor
+    const voteCount=Object.values(cachedVotes).filter(v=>v[c]!==undefined).length;
+    row.innerHTML=`<span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#f0ece4;">${c}</span>
+      <span style="font-size:12px;color:rgba(240,236,228,0.35);">${voteCount} vote${voteCount!==1?'s':''} in</span>`;
+    if(i===COMPETITORS.length-1) row.style.borderBottom='none';
+    compEl.appendChild(row);
+  });
+}
 
 init();
 </script>
