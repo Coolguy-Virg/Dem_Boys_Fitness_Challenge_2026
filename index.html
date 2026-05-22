@@ -274,7 +274,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   </div>
   <div style="padding:0 1.25rem;">
     <div class="photos-strip-wrap">
-      <p class="swipe-hint">← swipe to see before &amp; current →</p>
+      <p class="swipe-hint">← swipe · Before 1 · Before 2 · Current 1 · Current 2 →</p>
       <div class="photos-strip" id="photos-grid"></div>
       <div class="photos-dots" id="photos-dots">
         <div class="photos-dot active"></div>
@@ -594,10 +594,19 @@ function loadCompetitor(){
 
   const strip = document.getElementById('photos-grid');
   strip.innerHTML = '';
-  ['before','after'].forEach(type => {
+
+  // 4 photos: before (slot: before + extra1), current (slot: after + extra2)
+  const photoSlots = [
+    { key: 'before',  label: 'Before 1' },
+    { key: 'extra1',  label: 'Before 2' },
+    { key: 'after',   label: 'Current 1' },
+    { key: 'extra2',  label: 'Current 2' },
+  ];
+
+  photoSlots.forEach(({ key, label }) => {
     const card = document.createElement('div');
     card.className = 'photo-card';
-    const url = cachedPhotos[comp] && cachedPhotos[comp][type];
+    const url = cachedPhotos[comp] && cachedPhotos[comp][key];
     if(url){
       const img = document.createElement('img');
       img.src = url;
@@ -605,22 +614,31 @@ function loadCompetitor(){
     }else{
       const ph = document.createElement('div');
       ph.className = 'photo-placeholder';
-      ph.innerHTML = `<span style="font-size:40px;opacity:0.15;">📷</span>
-        <span style="font-size:13px;">${type === 'before' ? 'Before photo not uploaded' : 'Current photo not uploaded'}</span>`;
+      ph.innerHTML = `<span style="font-size:36px;opacity:0.15;">📷</span>
+        <span style="font-size:12px;text-align:center;padding:0 8px;">${label}</span>`;
       card.appendChild(ph);
     }
     const lbl = document.createElement('div');
     lbl.className = 'photo-card-label';
-    lbl.textContent = type === 'before' ? 'Before' : 'Current';
+    lbl.textContent = label;
     card.appendChild(lbl);
     strip.appendChild(card);
   });
 
-  // Dot indicator
-  const dots = document.querySelectorAll('.photos-dot');
+  // Dot indicators — 4 dots
+  const dotsWrap = document.getElementById('photos-dots');
+  if(dotsWrap){
+    dotsWrap.innerHTML = '';
+    for(let d = 0; d < 4; d++){
+      const dot = document.createElement('div');
+      dot.className = 'photos-dot' + (d === 0 ? ' active' : '');
+      dotsWrap.appendChild(dot);
+    }
+  }
+  const allDots = () => document.querySelectorAll('#photos-dots .photos-dot');
   strip.addEventListener('scroll', () => {
-    const idx = Math.round(strip.scrollLeft / (strip.scrollWidth / 2));
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    const idx = Math.round(strip.scrollLeft / (strip.scrollWidth / 4));
+    allDots().forEach((d, i) => d.classList.toggle('active', i === idx));
   }, { passive: true });
 }
 
@@ -727,10 +745,6 @@ const orgRevealResults = guard('orgReveal', async function(){
   await fetchVotes(true);
   const done = realVoteCount(cachedVotes);
   if(done === 0){ showToast('No votes yet!'); goTo('admin-screen'); return; }
-  if(done < VOTERS.length){
-    const go = confirm(`Only ${done} of ${VOTERS.length} voted. Reveal anyway?`);
-    if(!go){ goTo('admin-screen'); return; }
-  }
   try{
     const fresh = await binGet(VOTES_BIN_ID) || {};
     fresh['__winner_revealed__'] = true;
@@ -880,15 +894,16 @@ function buildAdminList(){
     card.className = 'comp-admin-card';
     card.innerHTML = `<div class="comp-admin-name">${comp}</div>
       <div class="photo-upload-row">
-        ${['before','after','extra1','extra2'].map(type => `
-          <div class="photo-upload-slot" id="aslot-${comp}-${type}">
-            <input type="file" accept="image/*" onchange="adminUpload(this,'${comp}','${type}')">
-            <div class="slot-placeholder"><span style="font-size:24px;opacity:0.3;">📷</span><span>${
-              type==='before'?'Before':type==='after'?'Current':type==='extra1'?'Extra 1':'Extra 2'
-            }</span></div>
-            <span class="slot-label-overlay">${
-              type==='before'?'Before':type==='after'?'Current':type==='extra1'?'Extra 1':'Extra 2'
-            }</span>
+        ${[
+          {key:'before', label:'Before 1'},
+          {key:'extra1', label:'Before 2'},
+          {key:'after',  label:'Current 1'},
+          {key:'extra2', label:'Current 2'},
+        ].map(({key,label}) => `
+          <div class="photo-upload-slot" id="aslot-${comp}-${key}">
+            <input type="file" accept="image/*" onchange="adminUpload(this,'${comp}','${key}')">
+            <div class="slot-placeholder"><span style="font-size:24px;opacity:0.3;">📷</span><span>${label}</span></div>
+            <span class="slot-label-overlay">${label}</span>
           </div>`).join('')}
       </div>`;
     list.appendChild(card);
@@ -1003,13 +1018,18 @@ function renderPhotoLibrary(){
     card.innerHTML = `
       <h3 class="bebas" style="font-size:26px;color:#f5c842;margin-bottom:10px;">${comp}</h3>
       <div style="display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none;">
-        ${['before','after','extra1','extra2'].map(type => {
-          const url = cachedPhotos[comp] && cachedPhotos[comp][type];
+        ${[
+          {key:'before', label:'Before 1'},
+          {key:'extra1', label:'Before 2'},
+          {key:'after',  label:'Current 1'},
+          {key:'extra2', label:'Current 2'},
+        ].map(({key, label}) => {
+          const url = cachedPhotos[comp] && cachedPhotos[comp][key];
           return `<div style="flex:0 0 72vw;max-width:280px;scroll-snap-align:start;position:relative;border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:#161616;border:1px solid rgba(240,236,228,0.08);">
             ${url
               ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover;display:block;">`
-              : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:rgba(240,236,228,0.2);font-size:12px;"><span style="font-size:32px;opacity:0.2;">📷</span><span>No photo uploaded</span></div>`}
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:22px 10px 8px;text-align:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.8);">${type==='before'?'Before':type==='after'?'Current':type==='extra1'?'Extra 1':'Extra 2'}</div>
+              : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:rgba(240,236,228,0.2);font-size:12px;"><span style="font-size:32px;opacity:0.2;">📷</span><span>${label}</span></div>`}
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:22px 10px 8px;text-align:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.8);">${label}</div>
           </div>`;
         }).join('')}
       </div>
