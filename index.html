@@ -335,7 +335,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
         <span class="slider-tick">10</span>
       </div>
     </div>
-    <button class="btn-submit-vote" id="submit-vote-btn" onclick="submitVote()">Save Score ✓</button>
+    <button class="btn-submit-vote" id="submit-vote-btn" onclick="submitVote()">Save &amp; Next →</button>
   </div>
 </div>
 
@@ -642,7 +642,8 @@ const startVoting = guard('startVoting', async function(){
     return;
   }
   localVotes = {};
-  currentCompIdx = 0;
+  // Pick a random starting athlete
+  currentCompIdx = Math.floor(Math.random() * COMPETITORS.length);
   clearVoteProgress();
   goTo('vote-screen');
   loadCompetitor();
@@ -730,9 +731,7 @@ window.jumpToAthlete = jumpToAthlete;
 
 function loadCompetitor(){
   const comp = COMPETITORS[currentCompIdx];
-  document.getElementById('comp-idx').textContent = currentCompIdx + 1;
   document.getElementById('comp-name').textContent = comp;
-  document.getElementById('progress-fill').style.width = (currentCompIdx / 6 * 100) + '%';
   document.getElementById('score-slider').value = 5;
   updateSlider(5);
 
@@ -821,7 +820,7 @@ const submitVote = guard('submitVote', async function(){
     }catch(e){
       showToast('Error saving. Check connection & try again.');
       btn.disabled = false;
-      btn.textContent = 'Save Score ✓';
+      btn.textContent = 'Save & Next →';
       btn.style.opacity = '1';
     }
   } else {
