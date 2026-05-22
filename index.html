@@ -106,6 +106,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .athlete-chip.scored{border-color:rgba(245,200,66,0.4);color:rgba(245,200,66,0.7);background:rgba(245,200,66,0.06);}
 .athlete-chip.active{border-color:#f5c842;color:#0a0a0a;background:#f5c842;}
 .athlete-chip.scored.active{border-color:#f5c842;color:#0a0a0a;background:#f5c842;}
+.athlete-chip.self-chip{border-color:rgba(240,236,228,0.06);color:rgba(240,236,228,0.18);background:#0f0f0f;cursor:not-allowed;text-decoration:line-through;}
 #athlete-selector::-webkit-scrollbar{display:none;}
 .btn-submit-vote:disabled{opacity:0.4;cursor:not-allowed;}
 #handoff-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;}
@@ -492,10 +493,14 @@ async function fetchPhotos(){
 
 // Write: read-modify-write with retries to handle concurrent saves
 async function saveVoterVotes(voter, votesObj){
+  // Strip self-vote nulls before saving
+  const cleanVotes = Object.fromEntries(
+    Object.entries(votesObj).filter(([,v]) => v !== null)
+  );
   for(let attempt = 1; attempt <= MAX_RETRIES; attempt++){
     try{
       const fresh = await binGet(VOTES_BIN_ID) || {}; // always read fresh before write
-      fresh[voter] = votesObj;
+      fresh[voter] = cleanVotes;
       await binSet(VOTES_BIN_ID, fresh);
       cachedVotes = fresh;
       _votesTs = Date.now();
@@ -642,8 +647,13 @@ const startVoting = guard('startVoting', async function(){
     return;
   }
   localVotes = {};
-  // Pick a random starting athlete
-  currentCompIdx = Math.floor(Math.random() * COMPETITORS.length);
+  // Auto-skip self — mark as N/A so vote count stays correct
+  if(COMPETITORS.includes(currentVoter)){
+    localVotes[currentVoter] = null; // null = skipped/self
+  }
+  // Pick a random starting athlete that isn't self
+  const votableIdxs = COMPETITORS.map((c,i) => i).filter(i => COMPETITORS[i] !== currentVoter);
+  currentCompIdx = votableIdxs[Math.floor(Math.random() * votableIdxs.length)];
   clearVoteProgress();
   goTo('vote-screen');
   loadCompetitor();
@@ -707,11 +717,16 @@ function buildAthleteSelector(){
   if(!sel) return;
   sel.innerHTML = '';
   COMPETITORS.forEach((name, i) => {
-    const chip = document.createElement('button');
-    const scored = localVotes[name] !== undefined;
-    chip.className = 'athlete-chip' + (scored ? ' scored' : '') + (i === currentCompIdx ? ' active' : '');
-    chip.textContent = (scored ? '✓ ' : '') + name;
-    chip.onclick = () => jumpToAthlete(i);
+    const isSelf  = COMPETITORS.includes(currentVoter) && name === currentVoter;
+    const scored  = localVotes[name] !== undefined;
+    const chip    = document.createElement('button');
+    chip.className = 'athlete-chip'
+      + (isSelf  ? ' self-chip' : '')
+      + (!isSelf && scored ? ' scored' : '')
+      + (!isSelf && i === currentCompIdx ? ' active' : '');
+    chip.textContent = isSelf ? name + ' (you)' : (scored ? '✓ ' : '') + name;
+    chip.disabled    = isSelf;
+    chip.onclick     = isSelf ? null : () => jumpToAthlete(i);
     sel.appendChild(chip);
   });
   // Update progress label + bar
@@ -809,7 +824,8 @@ const submitVote = guard('submitVote', async function(){
   buildAthleteSelector();
 
   // All 6 scored? Final submit
-  if(Object.keys(localVotes).length >= COMPETITORS.length){
+  const votableCount = COMPETITORS.filter(c => c !== currentVoter).length;
+  if(Object.keys(localVotes).filter(k => localVotes[k] !== null).length >= votableCount){
     btn.disabled = true;
     btn.textContent = 'Submitting...';
     btn.style.opacity = '0.5';
@@ -825,7 +841,7 @@ const submitVote = guard('submitVote', async function(){
     }
   } else {
     // Auto-advance to next unscored athlete
-    const nextIdx = COMPETITORS.findIndex((c, i) => i !== currentCompIdx && localVotes[c] === undefined);
+    const nextIdx = COMPETITORS.findIndex((c, i) => i !== currentCompIdx && localVotes[c] === undefined && c !== currentVoter);
     showToast(comp + ' scored!');
     if(nextIdx !== -1){
       currentCompIdx = nextIdx;
