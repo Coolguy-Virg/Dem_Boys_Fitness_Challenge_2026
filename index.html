@@ -1017,31 +1017,45 @@ function setSlotImg(comp, type, url){
   if(ph) ph.style.display = 'none';
 }
 
+// Upload queue — prevents concurrent read-modify-write race conditions
+let _uploadQueue = Promise.resolve();
+
 async function adminUpload(input, comp, type){
   if(!input.files || !input.files[0]) return;
+  const file = input.files[0];
   const slot = document.getElementById(`aslot-${comp}-${type}`);
   const ov   = document.createElement('div');
   ov.className = 'uploading-overlay';
   ov.innerHTML = '<div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0;"></div><span>Uploading...</span>';
   slot.appendChild(ov);
-  const reader = new FileReader();
-  reader.onload = async e => {
+
+  // Read file to base64 first (fast, off the queue)
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  // Chain onto queue so uploads run one at a time — no race conditions
+  _uploadQueue = _uploadQueue.then(async () => {
     try{
+      // Always read fresh before writing
       const existing = await binGet(PHOTOS_BIN_ID) || {};
       if(!existing[comp]) existing[comp] = {};
-      existing[comp][type] = e.target.result;
+      existing[comp][type] = dataUrl;
       await binSet(PHOTOS_BIN_ID, existing);
       cachedPhotos  = existing;
       _photosLoaded = true;
-      setSlotImg(comp, type, e.target.result);
+      setSlotImg(comp, type, dataUrl);
       showToast('✓ Photo saved!');
     }catch(err){
       showToast('Upload failed. Try again.');
+      console.error('adminUpload error:', err);
     }finally{
       ov.remove();
     }
-  };
-  reader.readAsDataURL(input.files[0]);
+  });
 }
 
 // ── SPECTATOR ──
