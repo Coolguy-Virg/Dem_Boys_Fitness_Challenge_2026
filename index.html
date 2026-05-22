@@ -941,24 +941,12 @@ function renderSpectatorProgress(){
   if(!compEl) return;
   compEl.innerHTML = '';
   COMPETITORS.forEach((c, i) => {
-    const hasPhoto  = cachedPhotos[c] && (cachedPhotos[c]['before'] || cachedPhotos[c]['after']);
     const voteCount = Object.values(cachedVotes).filter(v => typeof v === 'object' && v[c] !== undefined).length;
     const row = document.createElement('div');
-    row.style.cssText = `padding:10px 0;border-bottom:1px solid rgba(240,236,228,0.06);${i === COMPETITORS.length - 1 ? 'border-bottom:none;' : ''}`;
+    row.style.cssText = `display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(240,236,228,0.06);${i === COMPETITORS.length - 1 ? 'border-bottom:none;' : ''}`;
     row.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0ece4;">${c}</span>
-        <span style="font-size:12px;color:rgba(240,236,228,0.35);">${voteCount} vote${voteCount !== 1 ? 's' : ''} in</span>
-      </div>
-      <button onclick="openPhotoLibraryAt('${c}')"
-        style="width:100%;background:${hasPhoto ? 'rgba(245,200,66,0.07)' : 'rgba(240,236,228,0.03)'};
-        border:1px solid ${hasPhoto ? 'rgba(245,200,66,0.2)' : 'rgba(240,236,228,0.08)'};
-        color:${hasPhoto ? '#f5c842' : 'rgba(240,236,228,0.25)'};
-        font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-        padding:9px 12px;border-radius:6px;cursor:${hasPhoto ? 'pointer' : 'default'};
-        text-align:left;display:flex;align-items:center;gap:8px;touch-action:manipulation;">
-        📸 ${hasPhoto ? 'View Photos' : 'No photos yet'}
-      </button>`;
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0ece4;">${c}</span>
+      <span style="font-size:12px;color:rgba(240,236,228,0.35);">${voteCount} vote${voteCount !== 1 ? 's' : ''} in</span>`;
     compEl.appendChild(row);
   });
 }
