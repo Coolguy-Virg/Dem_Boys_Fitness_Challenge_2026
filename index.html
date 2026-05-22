@@ -101,6 +101,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .slider-ticks{display:flex;justify-content:space-between;padding:0 2px;margin-top:6px;}
 .slider-tick{font-size:11px;color:rgba(240,236,228,0.3);}
 .btn-submit-vote{width:100%;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px;border-radius:6px;cursor:pointer;touch-action:manipulation;margin-top:4px;}
+.athlete-chip{flex:0 0 auto;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 12px;border-radius:100px;border:1.5px solid rgba(240,236,228,0.12);background:#161616;color:rgba(240,236,228,0.45);cursor:pointer;transition:all 0.15s;white-space:nowrap;touch-action:manipulation;}
+.athlete-chip:active{transform:scale(0.96);}
+.athlete-chip.scored{border-color:rgba(245,200,66,0.4);color:rgba(245,200,66,0.7);background:rgba(245,200,66,0.06);}
+.athlete-chip.active{border-color:#f5c842;color:#0a0a0a;background:#f5c842;}
+.athlete-chip.scored.active{border-color:#f5c842;color:#0a0a0a;background:#f5c842;}
+#athlete-selector::-webkit-scrollbar{display:none;}
 .btn-submit-vote:disabled{opacity:0.4;cursor:not-allowed;}
 #handoff-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;}
 .tally-text span{color:#f5c842;font-weight:600;}
@@ -287,10 +293,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       <button onclick="exitToLobby()" style="background:transparent;border:none;color:rgba(240,236,228,0.35);font-family:'DM Sans',sans-serif;font-size:13px;padding:0;cursor:pointer;display:flex;align-items:center;gap:5px;touch-action:manipulation;">
         ← Lobby
       </button>
-      <span style="font-size:11px;color:rgba(240,236,228,0.25);letter-spacing:0.1em;">progress saved</span>
+      <span style="font-size:11px;color:rgba(240,236,228,0.25);letter-spacing:0.1em;" id="vote-progress-label"></span>
     </div>
     <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    <p class="vote-meta">Athlete <span id="comp-idx">1</span> of 6</p>
+    <div id="athlete-selector" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;margin-bottom:0.75rem;"></div>
     <h2 class="vote-name bebas" id="comp-name">—</h2>
   </div>
   <div style="padding:0 1.25rem;">
@@ -329,7 +335,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
         <span class="slider-tick">10</span>
       </div>
     </div>
-    <button class="btn-submit-vote" id="submit-vote-btn" onclick="submitVote()">Submit Score →</button>
+    <button class="btn-submit-vote" id="submit-vote-btn" onclick="submitVote()">Save Score ✓</button>
   </div>
 </div>
 
@@ -638,8 +644,8 @@ const startVoting = guard('startVoting', async function(){
   localVotes = {};
   currentCompIdx = 0;
   clearVoteProgress();
-  loadCompetitor();
   goTo('vote-screen');
+  loadCompetitor();
 });
 
 function saveVoteProgress(){
@@ -694,6 +700,33 @@ async function resumeVoting(){
   goTo('vote-screen');
 }
 window.resumeVoting = resumeVoting;
+
+function buildAthleteSelector(){
+  const sel = document.getElementById('athlete-selector');
+  if(!sel) return;
+  sel.innerHTML = '';
+  COMPETITORS.forEach((name, i) => {
+    const chip = document.createElement('button');
+    const scored = localVotes[name] !== undefined;
+    chip.className = 'athlete-chip' + (scored ? ' scored' : '') + (i === currentCompIdx ? ' active' : '');
+    chip.textContent = (scored ? '✓ ' : '') + name;
+    chip.onclick = () => jumpToAthlete(i);
+    sel.appendChild(chip);
+  });
+  // Update progress label + bar
+  const scoredCount = Object.keys(localVotes).length;
+  const pct = scoredCount / COMPETITORS.length * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  const lbl = document.getElementById('vote-progress-label');
+  if(lbl) lbl.textContent = scoredCount + ' of 6 scored';
+}
+
+function jumpToAthlete(idx){
+  currentCompIdx = idx;
+  loadCompetitor();
+  window.scrollTo(0, 0);
+}
+window.jumpToAthlete = jumpToAthlete;
 
 function loadCompetitor(){
   const comp = COMPETITORS[currentCompIdx];
@@ -763,39 +796,42 @@ function loadCompetitor(){
 
   buildStrip('photos-grid-before', 'photos-dots-before', beforeSlots);
   buildStrip('photos-grid-after',  'photos-dots-after',  afterSlots);
+  buildAthleteSelector();
 }
 
 const submitVote = guard('submitVote', async function(){
-  const btn = document.getElementById('submit-vote-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
-  btn.style.opacity = '0.5';
-
-  const comp  = COMPETITORS[currentCompIdx];
+  const btn  = document.getElementById('submit-vote-btn');
+  const comp = COMPETITORS[currentCompIdx];
   const score = parseFloat(parseFloat(document.getElementById('score-slider').value).toFixed(1));
   localVotes[comp] = score;
-  currentCompIdx++;
 
   // Save progress so voter can return later
   saveVoteProgress();
+  buildAthleteSelector();
 
-  if(currentCompIdx < COMPETITORS.length){
-    btn.disabled = false;
-    btn.textContent = 'Submit Score →';
-    btn.style.opacity = '1';
-    loadCompetitor();
-    window.scrollTo(0, 0);
-  }else{
+  // All 6 scored? Final submit
+  if(Object.keys(localVotes).length >= COMPETITORS.length){
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    btn.style.opacity = '0.5';
     try{
       await saveVoterVotes(currentVoter, localVotes);
-      clearVoteProgress(); // all done — clear saved state
+      clearVoteProgress();
       showHandoff();
     }catch(e){
       showToast('Error saving. Check connection & try again.');
       btn.disabled = false;
-      btn.textContent = 'Submit Score →';
+      btn.textContent = 'Save Score ✓';
       btn.style.opacity = '1';
-      currentCompIdx--;
+    }
+  } else {
+    // Auto-advance to next unscored athlete
+    const nextIdx = COMPETITORS.findIndex((c, i) => i !== currentCompIdx && localVotes[c] === undefined);
+    showToast(comp + ' scored!');
+    if(nextIdx !== -1){
+      currentCompIdx = nextIdx;
+      loadCompetitor();
+      window.scrollTo(0, 0);
     }
   }
 });
