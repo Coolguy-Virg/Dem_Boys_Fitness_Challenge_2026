@@ -84,7 +84,7 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .photos-strip::-webkit-scrollbar{display:none;}
 .photo-card{position:relative;border-radius:10px;overflow:hidden;flex:0 0 78vw;max-width:300px;aspect-ratio:9/16;background:#161616;border:1px solid rgba(240,236,228,0.08);scroll-snap-align:start;}
 .photo-card img{width:100%;height:100%;object-fit:contain;display:block;background:#161616;}
-.photo-card.cover img{object-fit:cover;aspect-ratio:9/16;}
+
 .photo-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:24px 12px 10px;text-align:center;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(240,236,228,0.85);}
 .photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:rgba(240,236,228,0.2);font-size:12px;}
 .photos-dots{display:flex;justify-content:center;gap:7px;margin:8px 0 10px;}
@@ -144,6 +144,19 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .btn-reset{width:100%;background:transparent;color:rgba(240,236,228,0.35);border:1px solid rgba(240,236,228,0.1);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px;border-radius:6px;cursor:pointer;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#f5c842;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:12px 24px;border-radius:100px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── Utility classes extracted from repeated inline styles ── */
+.screen-pad{padding:1.5rem 1.25rem;}
+.row-between{display:flex;justify-content:space-between;align-items:center;}
+.row-between-base{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.sub-text{font-size:13px;color:rgba(240,236,228,0.35);margin-bottom:1.5rem;}
+.strip-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.3);}
+.admin-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.35);display:block;margin-bottom:4px;}
+.admin-input{width:100%;background:#0f0f0f;border:1px solid rgba(240,236,228,0.15);border-radius:6px;padding:10px 12px;color:#f0ece4;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;}
+.btn-back-sm{background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
+.btn-danger{background:transparent;color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);font-family:'DM Sans',sans-serif;font-size:13px;padding:13px 8px;border-radius:6px;cursor:pointer;touch-action:manipulation;text-align:center;}
+.title-lg{font-size:36px;line-height:1;}
 </style>
 </head>
 <body>
@@ -188,7 +201,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
         <div class="admin-badge">Organizer Dashboard</div>
         <h1 class="bebas" style="font-size:36px;line-height:1;">Control Panel</h1>
       </div>
-      <button onclick="goTo('intro-screen')" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;">Sign Out</button>
+      <button onclick="goTo('intro-screen')" class="btn-back-sm">Sign Out</button>
     </div>
     <div class="admin-actions">
       <button class="admin-action-btn" onclick="goVoter()">🗳 Voting App</button>
@@ -203,8 +216,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <div id="admin-list"></div>
     <button class="btn-admin-save" onclick="goTo('intro-screen')">Done — Go to Voting App</button>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-      <button onclick="orgResetVotesOnly()" style="background:transparent;color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);font-family:'DM Sans',sans-serif;font-size:13px;padding:13px 8px;border-radius:6px;cursor:pointer;touch-action:manipulation;text-align:center;">🗳 Reset Votes Only</button>
-      <button onclick="orgResetVotes()" style="background:transparent;color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);font-family:'DM Sans',sans-serif;font-size:13px;padding:13px 8px;border-radius:6px;cursor:pointer;touch-action:manipulation;text-align:center;">🗑 Reset Votes & Photos</button>
+      <button onclick="orgResetVotesOnly()" class="btn-danger">🗳 Reset Votes Only</button>
+      <button onclick="orgResetVotes()" class="btn-danger">🗑 Reset Votes & Photos</button>
     </div>
   </div>
 </div>
@@ -234,7 +247,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
         <div class="admin-badge">Live View</div>
         <h1 class="bebas" style="font-size:36px;line-height:1;">Spectator Mode</h1>
       </div>
-      <button onclick="goTo('intro-screen')" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">← Back</button>
+      <button onclick="goTo('intro-screen')" class="btn-back-sm">← Back</button>
     </div>
     <div style="background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.15);border-radius:10px;padding:12px 14px;margin-bottom:1.5rem;font-size:13px;color:rgba(240,236,228,0.5);line-height:1.6;">
       👀 You are in <strong style="color:#f5c842;">read-only</strong> mode. You can see vote progress but cannot cast votes.
@@ -261,7 +274,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
         <div class="admin-badge">Photo Gallery</div>
         <h1 class="bebas" style="font-size:36px;line-height:1;">Athlete Photos</h1>
       </div>
-      <button onclick="goTo('spectator-screen')" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">← Back</button>
+      <button onclick="goTo('spectator-screen')" class="btn-back-sm">← Back</button>
     </div>
     <p style="font-size:13px;color:rgba(240,236,228,0.35);margin-bottom:1.5rem;">Before &amp; Current photos for all athletes</p>
     <div id="photo-library-list"></div>
@@ -282,7 +295,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   </div>
   <div style="padding:0 1.25rem;">
     <div class="photos-strip-wrap" style="margin-bottom:0.75rem;">
-      <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.3);margin-bottom:6px;">Before</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+        <p class="strip-label">Before</p>
+        <div id="weight-badge-before"></div>
+      </div>
       <div class="photos-strip" id="photos-grid-before"></div>
       <div class="photos-dots" id="photos-dots-before">
         <div class="photos-dot active"></div>
@@ -290,7 +306,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       </div>
     </div>
     <div class="photos-strip-wrap">
-      <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.3);margin-bottom:6px;">Current</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+        <p class="strip-label">Current</p>
+        <div id="weight-badge-current"></div>
+      </div>
       <div class="photos-strip" id="photos-grid-after"></div>
       <div class="photos-dots" id="photos-dots-after">
         <div class="photos-dot active"></div>
@@ -728,6 +747,20 @@ function loadCompetitor(){
     }, { passive: true });
   }
 
+  // Show weight badges above each strip
+  const wBefore  = cachedPhotos[comp] && cachedPhotos[comp]['weight_before']  ? cachedPhotos[comp]['weight_before']  + ' lbs' : null;
+  const wCurrent = cachedPhotos[comp] && cachedPhotos[comp]['weight_current'] ? cachedPhotos[comp]['weight_current'] + ' lbs' : null;
+
+  function setWeightBadge(id, weight){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = weight
+      ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f5c842;">${weight}</span>`
+      : '';
+  }
+  setWeightBadge('weight-badge-before',  wBefore);
+  setWeightBadge('weight-badge-current', wCurrent);
+
   buildStrip('photos-grid-before', 'photos-dots-before', beforeSlots);
   buildStrip('photos-grid-after',  'photos-dots-after',  afterSlots);
 }
@@ -986,7 +1019,23 @@ function buildAdminList(){
   COMPETITORS.forEach(comp => {
     const card = document.createElement('div');
     card.className = 'comp-admin-card';
+    const wBefore  = cachedPhotos[comp] && cachedPhotos[comp]['weight_before']  ? cachedPhotos[comp]['weight_before']  : '';
+    const wCurrent = cachedPhotos[comp] && cachedPhotos[comp]['weight_current'] ? cachedPhotos[comp]['weight_current'] : '';
     card.innerHTML = `<div class="comp-admin-name">${comp}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div>
+          <label class="admin-label">Before Weight (lbs)</label>
+          <input type="number" id="weight-before-${comp}" value="${wBefore}" placeholder="e.g. 185"
+            onchange="saveWeight('${comp}','weight_before',this.value)"
+            class="admin-input">
+        </div>
+        <div>
+          <label class="admin-label">Current Weight (lbs)</label>
+          <input type="number" id="weight-current-${comp}" value="${wCurrent}" placeholder="e.g. 172"
+            onchange="saveWeight('${comp}','weight_current',this.value)"
+            class="admin-input">
+        </div>
+      </div>
       <div class="photo-upload-row">
         ${[
           {key:'before', label:'Before 1'},
@@ -1018,8 +1067,7 @@ function setSlotImg(comp, type, url){
   if(ph) ph.style.display = 'none';
 }
 
-// ── FIREBASE STORAGE (for photos) ──
-// Upload photo to Firebase Storage, save URL to JSONBin
+// ── FIREBASE STORAGE ── upload to Storage, save URL to JSONBin
 const FIREBASE_API_KEY    = 'AIzaSyDrvOC9iO95jtZVKsV_NO7HuXec1xtDqK0';
 const FIREBASE_BUCKET     = 'dem-boys-challenge.firebasestorage.app';
 const FIREBASE_PROJECT_ID = 'dem-boys-challenge';
@@ -1041,6 +1089,24 @@ async function uploadToFirebase(file, path){
   const downloadUrl = `https://firebasestorage.googleapis.com/v0/b/${FIREBASE_BUCKET}/o/${encodeURIComponent(path)}?alt=media&token=${json.downloadTokens}`;
   return downloadUrl;
 }
+
+// Save weight to photos bin (queued like photos)
+async function saveWeight(comp, field, value){
+  if(!value) return;
+  _uploadQueue = _uploadQueue.then(async () => {
+    try{
+      const existing = await binGet(PHOTOS_BIN_ID) || {};
+      if(!existing[comp]) existing[comp] = {};
+      existing[comp][field] = value;
+      await binSet(PHOTOS_BIN_ID, existing);
+      cachedPhotos = existing;
+      showToast('✓ Weight saved!');
+    }catch(e){
+      showToast('Save failed. Try again.');
+    }
+  });
+}
+window.saveWeight = saveWeight;
 
 // Upload queue — prevents concurrent read-modify-write race conditions on JSONBin
 let _uploadQueue = Promise.resolve();
@@ -1075,7 +1141,6 @@ async function adminUpload(input, comp, type){
       showToast('✓ Photo saved!');
     }catch(err){
       showToast('Upload failed — check connection.');
-      console.error('adminUpload error:', err);
     }finally{
       ov.remove();
     }
