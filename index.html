@@ -14,18 +14,7 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
 #loading-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;}
-.bicep-loader{font-size:48px;display:block;margin:0 auto 1rem;animation:bicepCurl 0.6s steps(8) infinite;}
-@keyframes bicepCurl{
-  0%  {transform:rotate(0deg)   scale(1);}
-  12% {transform:rotate(45deg)  scale(1.05);}
-  25% {transform:rotate(90deg)  scale(1.1);}
-  37% {transform:rotate(135deg) scale(1.15);}
-  50% {transform:rotate(180deg) scale(1.2);}
-  62% {transform:rotate(135deg) scale(1.15);}
-  75% {transform:rotate(90deg)  scale(1.1);}
-  87% {transform:rotate(45deg)  scale(1.05);}
-  100%{transform:rotate(0deg)   scale(1);}
-}
+
 .spinner{width:36px;height:36px;border:3px solid rgba(245,200,66,0.2);border-top-color:#f5c842;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
 #intro-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;position:relative;}
@@ -152,7 +141,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 <body>
 
 <div id="loading-screen" class="screen active">
-  <div><span class="bicep-loader">💪</span><p style="color:rgba(240,236,228,0.4);font-size:14px;letter-spacing:0.1em;">Loading...</p></div>
+  <div><div class="spinner"></div><p style="color:rgba(240,236,228,0.4);font-size:14px;">Loading...</p></div>
 </div>
 
 <div id="intro-screen" class="screen">
@@ -355,15 +344,22 @@ function updateSlider(val){
 // ── JSONBIN API ──
 async function binGet(binId){
   const r=await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`,{
-    headers:{'X-Master-Key':JSONBIN_MASTER_KEY}
+    headers:{
+      'X-Master-Key':JSONBIN_MASTER_KEY,
+      'X-Bin-Meta':false
+    }
   });
+  if(!r.ok) throw new Error(`binGet HTTP ${r.status}`);
   const j=await r.json();
-  return j.record;
+  return j.record || j;
 }
 async function binSet(binId,data){
-  await fetch(`https://api.jsonbin.io/v3/b/${binId}`,{
+  const r=await fetch(`https://api.jsonbin.io/v3/b/${binId}`,{
     method:'PUT',
-    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY},
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key':JSONBIN_MASTER_KEY
+    },
     body:JSON.stringify(data)
   });
 }
@@ -435,8 +431,7 @@ function startLobbyPoll(){
       document.getElementById('tally-num').textContent=done;
       // refresh voted states
       document.querySelectorAll('.voter-btn').forEach(btn=>{
-        const name=btn.textContent.split('
-')[0].trim();
+        const name=btn.textContent.split('\n')[0].trim();
         const voted=data[name]!==undefined;
         if(voted&&!btn.classList.contains('voted')){btn.classList.add('voted');btn.innerHTML=name+'<br><span style="font-size:10px;opacity:0.6;">✓ voted</span>';}
       });
@@ -559,7 +554,7 @@ window.submitVote=submitVote;
 function showHandoff(){
   const done=realVoteCount(cachedVotes);
   const nameEl=document.getElementById('handoff-voter-name');
-  if(nameEl) nameEl.textContent=currentVoter ? currentVoter+''s votes are in!' : '';
+  if(nameEl) nameEl.textContent=currentVoter ? currentVoter+" - votes are in!" : "";
   document.getElementById('tally-text').innerHTML=
     `<span>${done}</span> of <span>${VOTERS.length}</span> voters done`;
   const summary=document.getElementById('vote-summary');
