@@ -133,6 +133,15 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .lb-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#f5c842;}
 .lb-votes-ct{font-size:10px;color:rgba(240,236,228,0.3);margin-top:1px;}
 .champ-tag{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;background:#f5c842;color:#0a0a0a;padding:3px 7px;border-radius:2px;font-weight:700;}
+.lb-dropdown-btn{width:100%;background:transparent;border:none;color:rgba(240,236,228,0.3);font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 0 2px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:5px;touch-action:manipulation;transition:color 0.15s;}
+.lb-dropdown-btn:hover{color:rgba(240,236,228,0.6);}
+.lb-dropdown-btn .arrow{display:inline-block;transition:transform 0.2s;font-size:10px;}
+.lb-dropdown-btn.open .arrow{transform:rotate(180deg);}
+.lb-scores-panel{display:none;padding:8px 0 2px;border-top:1px solid rgba(240,236,228,0.07);margin-top:6px;}
+.lb-scores-panel.open{display:block;}
+.lb-score-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+.lb-score-voter{font-size:11px;color:rgba(240,236,228,0.4);}
+.lb-score-val{font-size:12px;font-weight:600;color:rgba(240,236,228,0.7);}
 .btn-reset{width:100%;background:transparent;color:rgba(240,236,228,0.35);border:1px solid rgba(240,236,228,0.1);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px;border-radius:6px;cursor:pointer;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#f5c842;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:12px 24px;border-radius:100px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -150,7 +159,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <div class="intro-badge">March — May 2026</div>
     <h1 class="intro-title bebas">Dem Boys<br><span>Fitness</span><br>Challenge</h1>
     <p class="intro-dates">Body Transformation · 6 Athletes</p>
-    <div class="fire-row">🔥💪🔥</div>
+    <iframe src="https://giphy.com/embed/hoIFd5c6YIAFv8yedH" width="220" height="220" style="border-radius:12px;margin-bottom:1.5rem;display:block;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
     <button class="btn-cta" onclick="goVoter()">Begin Voting</button>
     <span class="admin-link" onclick="goTo('organizer-login-screen')">Organizer Login</span>
   </div>
@@ -766,19 +775,54 @@ function showResults(){
   const medals=['1st','2nd','3rd','4th','5th','6th'];
   const rankCls=['gold','silver','bronze','','',''];
   ranked.forEach((item,i)=>{
+    // Build per-voter score rows
+    const voterScores = VOTERS.map(v=>{
+      const s = cachedVotes[v] && cachedVotes[v][item.name];
+      return {voter:v, score: typeof s==='number' ? s : null};
+    });
+
+    const dropdownId = 'scores-'+item.name.replace(/\s/g,'-');
+    const btnId = 'btn-'+item.name.replace(/\s/g,'-');
+
     const row=document.createElement('div');
     row.className='lb-row'+(i===0?' lb-winner':'');
-    row.innerHTML=`<span class="lb-rank ${rankCls[i]} bebas">${medals[i]}</span>
-      <div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;">
-        <span class="lb-name bebas">${item.name}</span>
-        ${i===0?'<span class="champ-tag">Champion</span>':''}
-      </div><div class="lb-votes-ct">${item.votes} vote${item.votes!==1?'s':''}</div></div>
+    row.innerHTML=`
+      <span class="lb-rank ${rankCls[i]} bebas">${medals[i]}</span>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="lb-name bebas">${item.name}</span>
+          ${i===0?'<span class="champ-tag">Champion</span>':''}
+        </div>
+        <div class="lb-votes-ct">${item.votes} vote${item.votes!==1?'s':''}</div>
+        <button class="lb-dropdown-btn" id="${btnId}" onclick="toggleScores('${dropdownId}','${btnId}')">
+          <span class="arrow">▼</span> See all scores
+        </button>
+        <div class="lb-scores-panel" id="${dropdownId}">
+          ${voterScores.map(vs=>`
+            <div class="lb-score-row">
+              <span class="lb-score-voter">${vs.voter}</span>
+              <span class="lb-score-val">${vs.score !== null ? vs.score.toFixed(1) : '—'}</span>
+            </div>`).join('')}
+        </div>
+      </div>
       <span class="lb-score bebas">${item.avg.toFixed(1)}</span>`;
     lb.appendChild(row);
   });
   launchConfetti();
   goTo('results-screen');
 }
+
+function toggleScores(panelId, btnId){
+  const panel = document.getElementById(panelId);
+  const btn = document.getElementById(btnId);
+  if(!panel||!btn) return;
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('.arrow').style.transform = isOpen ? '' : 'rotate(180deg)';
+  btn.innerHTML = `<span class="arrow" style="display:inline-block;transition:transform 0.2s;font-size:10px;transform:${isOpen?'':'rotate(180deg)'}">▼</span> ${isOpen?'See all scores':'Hide scores'}`;
+}
+window.toggleScores=toggleScores;
 
 function launchConfetti(){
   const wrap=document.getElementById('confetti-wrap');
