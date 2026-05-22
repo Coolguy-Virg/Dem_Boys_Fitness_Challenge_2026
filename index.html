@@ -213,6 +213,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <h2 class="screen-title bebas">Who Are You?</h2>
     <p class="screen-sub">Pick your name — votes are anonymous</p>
     <p class="voter-tally"><span id="tally-num">0</span> of 12 voters done</p>
+    <div id="resume-banner" style="display:none;background:rgba(245,200,66,0.05);border:1px solid rgba(245,200,66,0.15);border-radius:10px;padding:12px 14px;margin-bottom:1rem;"></div>
     <div class="voter-grid" id="voter-grid"></div>
     <button class="btn-confirm" id="voter-confirm-btn" disabled onclick="startVoting()">Lock In &amp; Start Voting</button>
     <div style="margin-top:12px;text-align:center;">
@@ -268,15 +269,29 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 <div id="vote-screen" class="screen">
   <div style="padding:1.25rem 1.25rem 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+      <button onclick="exitToLobby()" style="background:transparent;border:none;color:rgba(240,236,228,0.35);font-family:'DM Sans',sans-serif;font-size:13px;padding:0;cursor:pointer;display:flex;align-items:center;gap:5px;touch-action:manipulation;">
+        ← Lobby
+      </button>
+      <span style="font-size:11px;color:rgba(240,236,228,0.25);letter-spacing:0.1em;">progress saved</span>
+    </div>
     <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <p class="vote-meta">Athlete <span id="comp-idx">1</span> of 6</p>
     <h2 class="vote-name bebas" id="comp-name">—</h2>
   </div>
   <div style="padding:0 1.25rem;">
+    <div class="photos-strip-wrap" style="margin-bottom:0.75rem;">
+      <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.3);margin-bottom:6px;">Before</p>
+      <div class="photos-strip" id="photos-grid-before"></div>
+      <div class="photos-dots" id="photos-dots-before">
+        <div class="photos-dot active"></div>
+        <div class="photos-dot"></div>
+      </div>
+    </div>
     <div class="photos-strip-wrap">
-      <p class="swipe-hint">← swipe · Before 1 · Before 2 · Current 1 · Current 2 →</p>
-      <div class="photos-strip" id="photos-grid"></div>
-      <div class="photos-dots" id="photos-dots">
+      <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.3);margin-bottom:6px;">Current</p>
+      <div class="photos-strip" id="photos-grid-after"></div>
+      <div class="photos-dots" id="photos-dots-after">
         <div class="photos-dot active"></div>
         <div class="photos-dot"></div>
       </div>
@@ -544,8 +559,30 @@ function renderVoterGrid(){
   const done = realVoteCount(cachedVotes);
   const tallyEl = document.getElementById('tally-num');
   if(tallyEl) tallyEl.textContent = done;
-  currentVoter = null;
   document.getElementById('voter-confirm-btn').disabled = true;
+
+  // Check for saved in-progress session
+  const savedRaw = sessionStorage.getItem('voteProgress');
+  const resumeBanner = document.getElementById('resume-banner');
+  if(savedRaw){
+    try{
+      const { voter, compIdx } = JSON.parse(savedRaw);
+      if(!cachedVotes[voter] && resumeBanner){
+        resumeBanner.style.display = 'block';
+        resumeBanner.innerHTML = `
+          <p style="font-size:13px;color:rgba(240,236,228,0.6);margin-bottom:8px;">
+            <span style="color:#f5c842;font-weight:600;">${voter}</span> has ${compIdx} of 6 scores saved
+          </p>
+          <button onclick="resumeVoting()" style="width:100%;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.08em;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.3);color:#f5c842;padding:13px;border-radius:6px;cursor:pointer;touch-action:manipulation;">
+            ▶ Resume ${voter} Session
+          </button>`;
+      }
+    }catch(e){}
+  } else if(resumeBanner){
+    resumeBanner.style.display = 'none';
+  }
+
+  currentVoter = null;
 
   VOTERS.forEach(v => {
     const voted = cachedVotes[v] !== undefined;
@@ -580,9 +617,63 @@ const startVoting = guard('startVoting', async function(){
   }
   localVotes = {};
   currentCompIdx = 0;
+  clearVoteProgress();
   loadCompetitor();
   goTo('vote-screen');
 });
+
+function saveVoteProgress(){
+  if(!currentVoter) return;
+  sessionStorage.setItem('voteProgress', JSON.stringify({
+    voter: currentVoter,
+    compIdx: currentCompIdx,
+    votes: localVotes
+  }));
+}
+
+function clearVoteProgress(){
+  sessionStorage.removeItem('voteProgress');
+}
+
+function restoreVoteProgress(){
+  try{
+    const saved = sessionStorage.getItem('voteProgress');
+    if(!saved) return false;
+    const { voter, compIdx, votes } = JSON.parse(saved);
+    // Only restore if voter hasn't fully submitted yet
+    if(cachedVotes[voter]) { clearVoteProgress(); return false; }
+    currentVoter   = voter;
+    currentCompIdx = compIdx;
+    localVotes     = votes || {};
+    return true;
+  }catch(e){ return false; }
+}
+
+function exitToLobby(){
+  // Save current progress before leaving
+  saveVoteProgress();
+  showToast('Progress saved — come back anytime!');
+  renderVoterGrid();
+  goTo('voter-screen');
+  startLobbyPoll();
+}
+window.exitToLobby = exitToLobby;
+
+async function resumeVoting(){
+  goTo('loading-screen');
+  await fetchVotes(true);
+  await fetchPhotos();
+  if(!restoreVoteProgress()){
+    showToast('Session expired.');
+    renderVoterGrid();
+    goTo('voter-screen');
+    startLobbyPoll();
+    return;
+  }
+  loadCompetitor();
+  goTo('vote-screen');
+}
+window.resumeVoting = resumeVoting;
 
 function loadCompetitor(){
   const comp = COMPETITORS[currentCompIdx];
@@ -592,54 +683,52 @@ function loadCompetitor(){
   document.getElementById('score-slider').value = 5;
   updateSlider(5);
 
-  const strip = document.getElementById('photos-grid');
-  strip.innerHTML = '';
-
-  // 4 photos: before (slot: before + extra1), current (slot: after + extra2)
-  const photoSlots = [
-    { key: 'before',  label: 'Before 1' },
-    { key: 'extra1',  label: 'Before 2' },
-    { key: 'after',   label: 'Current 1' },
-    { key: 'extra2',  label: 'Current 2' },
+  // Before strip: before + extra1
+  const beforeSlots = [
+    { key: 'before', label: 'Before 1' },
+    { key: 'extra1', label: 'Before 2' },
+  ];
+  // Current strip: after + extra2
+  const afterSlots = [
+    { key: 'after',  label: 'Current 1' },
+    { key: 'extra2', label: 'Current 2' },
   ];
 
-  photoSlots.forEach(({ key, label }) => {
-    const card = document.createElement('div');
-    card.className = 'photo-card';
-    const url = cachedPhotos[comp] && cachedPhotos[comp][key];
-    if(url){
-      const img = document.createElement('img');
-      img.src = url;
-      card.appendChild(img);
-    }else{
-      const ph = document.createElement('div');
-      ph.className = 'photo-placeholder';
-      ph.innerHTML = `<span style="font-size:36px;opacity:0.15;">📷</span>
-        <span style="font-size:12px;text-align:center;padding:0 8px;">${label}</span>`;
-      card.appendChild(ph);
-    }
-    const lbl = document.createElement('div');
-    lbl.className = 'photo-card-label';
-    lbl.textContent = label;
-    card.appendChild(lbl);
-    strip.appendChild(card);
-  });
-
-  // Dot indicators — 4 dots
-  const dotsWrap = document.getElementById('photos-dots');
-  if(dotsWrap){
-    dotsWrap.innerHTML = '';
-    for(let d = 0; d < 4; d++){
-      const dot = document.createElement('div');
-      dot.className = 'photos-dot' + (d === 0 ? ' active' : '');
-      dotsWrap.appendChild(dot);
-    }
+  function buildStrip(stripId, dotsId, slots){
+    const strip = document.getElementById(stripId);
+    if(!strip) return;
+    strip.innerHTML = '';
+    slots.forEach(({ key, label }) => {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      const url = cachedPhotos[comp] && cachedPhotos[comp][key];
+      if(url){
+        const img = document.createElement('img');
+        img.src = url;
+        card.appendChild(img);
+      }else{
+        const ph = document.createElement('div');
+        ph.className = 'photo-placeholder';
+        ph.innerHTML = `<span style="font-size:36px;opacity:0.15;">📷</span>
+          <span style="font-size:12px;text-align:center;padding:0 8px;">${label}</span>`;
+        card.appendChild(ph);
+      }
+      const lbl = document.createElement('div');
+      lbl.className = 'photo-card-label';
+      lbl.textContent = label;
+      card.appendChild(lbl);
+      strip.appendChild(card);
+    });
+    // Dot sync
+    const getDots = () => document.querySelectorAll(`#${dotsId} .photos-dot`);
+    strip.addEventListener('scroll', () => {
+      const i = Math.round(strip.scrollLeft / (strip.scrollWidth / slots.length));
+      getDots().forEach((d, j) => d.classList.toggle('active', j === i));
+    }, { passive: true });
   }
-  const allDots = () => document.querySelectorAll('#photos-dots .photos-dot');
-  strip.addEventListener('scroll', () => {
-    const idx = Math.round(strip.scrollLeft / (strip.scrollWidth / 4));
-    allDots().forEach((d, i) => d.classList.toggle('active', i === idx));
-  }, { passive: true });
+
+  buildStrip('photos-grid-before', 'photos-dots-before', beforeSlots);
+  buildStrip('photos-grid-after',  'photos-dots-after',  afterSlots);
 }
 
 const submitVote = guard('submitVote', async function(){
@@ -653,6 +742,9 @@ const submitVote = guard('submitVote', async function(){
   localVotes[comp] = score;
   currentCompIdx++;
 
+  // Save progress so voter can return later
+  saveVoteProgress();
+
   if(currentCompIdx < COMPETITORS.length){
     btn.disabled = false;
     btn.textContent = 'Submit Score →';
@@ -662,6 +754,7 @@ const submitVote = guard('submitVote', async function(){
   }else{
     try{
       await saveVoterVotes(currentVoter, localVotes);
+      clearVoteProgress(); // all done — clear saved state
       showHandoff();
     }catch(e){
       showToast('Error saving. Check connection & try again.');
