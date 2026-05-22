@@ -1017,7 +1017,31 @@ function setSlotImg(comp, type, url){
   if(ph) ph.style.display = 'none';
 }
 
-// Upload queue — prevents concurrent read-modify-write race conditions
+// ── FIREBASE STORAGE (for photos) ──
+// Upload photo to Firebase Storage, save URL to JSONBin
+const FIREBASE_API_KEY    = 'AIzaSyDrvOC9iO95jtZVKsV_NO7HuXec1xtDqK0';
+const FIREBASE_BUCKET     = 'dem-boys-challenge.firebasestorage.app';
+const FIREBASE_PROJECT_ID = 'dem-boys-challenge';
+
+async function uploadToFirebase(file, path){
+  // Get upload URL via Firebase REST API
+  const uploadUrl = `https://firebasestorage.googleapis.com/v0/b/${FIREBASE_BUCKET}/o?uploadType=media&name=${encodeURIComponent(path)}`;
+  const r = await fetchWithTimeout(uploadUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': file.type || 'image/jpeg', 'X-Firebase-GMPID': FIREBASE_PROJECT_ID },
+    body: file
+  }, 30000); // 30s timeout for file uploads
+  if(!r.ok){
+    const err = await r.text();
+    throw new Error(`Firebase upload failed: ${r.status} ${err}`);
+  }
+  const json = await r.json();
+  // Build public download URL
+  const downloadUrl = `https://firebasestorage.googleapis.com/v0/b/${FIREBASE_BUCKET}/o/${encodeURIComponent(path)}?alt=media&token=${json.downloadTokens}`;
+  return downloadUrl;
+}
+
+// Upload queue — prevents concurrent read-modify-write race conditions on JSONBin
 let _uploadQueue = Promise.resolve();
 
 async function adminUpload(input, comp, type){
@@ -1029,32 +1053,50 @@ async function adminUpload(input, comp, type){
   ov.innerHTML = '<div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0;"></div><span>Uploading...</span>';
   slot.appendChild(ov);
 
-  // Read file to base64 first (fast, off the queue)
-  const dataUrl = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = e => resolve(e.target.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+  // Compress image before upload (max 800px wide, 0.8 quality)
+  const compressedFile = await compressImage(file, 800, 0.82);
 
-  // Chain onto queue so uploads run one at a time — no race conditions
+  // Chain onto queue — uploads run sequentially, JSONBin writes never race
   _uploadQueue = _uploadQueue.then(async () => {
     try{
-      // Always read fresh before writing
+      // 1. Upload file to Firebase Storage
+      const path = `photos/${comp}_${type}_${Date.now()}.jpg`;
+      const downloadUrl = await uploadToFirebase(compressedFile, path);
+
+      // 2. Save URL (not base64!) to JSONBin — tiny payload
       const existing = await binGet(PHOTOS_BIN_ID) || {};
       if(!existing[comp]) existing[comp] = {};
-      existing[comp][type] = dataUrl;
+      existing[comp][type] = downloadUrl;
       await binSet(PHOTOS_BIN_ID, existing);
       cachedPhotos  = existing;
       _photosLoaded = true;
-      setSlotImg(comp, type, dataUrl);
+      setSlotImg(comp, type, downloadUrl);
       showToast('✓ Photo saved!');
     }catch(err){
-      showToast('Upload failed. Try again.');
+      showToast('Upload failed — check connection.');
       console.error('adminUpload error:', err);
     }finally{
       ov.remove();
     }
+  });
+}
+
+// Compress image to reduce upload size
+function compressImage(file, maxWidth, quality){
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale  = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => resolve(blob || file), 'image/jpeg', quality);
+    };
+    img.onerror = () => resolve(file);
+    img.src = url;
   });
 }
 
