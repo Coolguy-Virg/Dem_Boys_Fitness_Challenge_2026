@@ -13,11 +13,9 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .bebas{font-family:'Bebas Neue',sans-serif;letter-spacing:0.04em;}
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
-
 #loading-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;}
 .spinner{width:36px;height:36px;border:3px solid rgba(245,200,66,0.2);border-top-color:#f5c842;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
 #intro-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;position:relative;}
 .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,200,50,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,200,50,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
 .intro-inner{position:relative;z-index:1;padding:2rem 1.5rem;display:flex;flex-direction:column;align-items:center;}
@@ -29,7 +27,6 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .btn-cta{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px 52px;border-radius:5px;cursor:pointer;transition:transform 0.15s;touch-action:manipulation;}
 .btn-cta:active{transform:scale(0.97);}
 .admin-link{margin-top:1.5rem;font-size:12px;color:rgba(240,236,228,0.2);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-
 #organizer-login-screen{background:#0a0a0a;align-items:center;justify-content:center;padding:2rem 1.5rem;}
 .login-box{width:100%;max-width:360px;}
 .login-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(240,236,228,0.4);display:block;margin-bottom:6px;}
@@ -39,7 +36,6 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .btn-login{width:100%;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px;border-radius:6px;cursor:pointer;touch-action:manipulation;}
 .btn-back{width:100%;margin-top:10px;background:transparent;color:rgba(240,236,228,0.3);border:1px solid rgba(240,236,228,0.08);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px;border-radius:6px;cursor:pointer;}
 .err-msg{color:#ff6b6b;font-size:13px;text-align:center;margin-bottom:1rem;display:none;}
-
 #admin-screen{background:#0a0a0a;overflow-y:auto;}
 #admin-screen .inner{padding:1.5rem 1.25rem;}
 .admin-badge{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#f5c842;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);border-radius:100px;padding:5px 14px;display:inline-block;margin-bottom:0.75rem;}
@@ -62,7 +58,6 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .slot-placeholder{display:flex;flex-direction:column;align-items:center;gap:5px;color:rgba(240,236,228,0.25);font-size:11px;pointer-events:none;}
 .uploading-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:3;flex-direction:column;gap:8px;font-size:12px;color:#f5c842;}
 .btn-admin-save{width:100%;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px;border-radius:6px;cursor:pointer;margin-top:4px;touch-action:manipulation;}
-
 #voter-screen{background:#0a0a0a;padding:1.5rem 1.25rem;}
 .screen-title{font-size:38px;color:#f0ece4;line-height:1;margin-bottom:0.3rem;}
 .screen-sub{font-size:13px;color:rgba(240,236,228,0.4);margin-bottom:0.75rem;}
@@ -77,7 +72,6 @@ body{font-family:'DM Sans',sans-serif;color:#f0ece4;overflow-x:hidden;}
 .org-section{margin-top:1.5rem;border-top:1px solid rgba(240,236,228,0.07);padding-top:1.25rem;text-align:center;}
 .org-label{font-size:11px;color:rgba(240,236,228,0.2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;}
 .btn-org{width:100%;background:transparent;color:rgba(245,200,66,0.5);border:1px solid rgba(245,200,66,0.2);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;padding:13px;border-radius:6px;cursor:pointer;touch-action:manipulation;}
-
 #vote-screen{background:#0a0a0a;padding:1.25rem 1.25rem 2rem;}
 .progress-wrap{background:rgba(240,236,228,0.08);border-radius:2px;height:3px;margin-bottom:1.25rem;overflow:hidden;}
 .progress-fill{height:100%;background:#f5c842;border-radius:2px;transition:width 0.4s ease;}
@@ -99,19 +93,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .slider-tick{font-size:11px;color:rgba(240,236,228,0.3);}
 .btn-submit-vote{width:100%;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;background:#f5c842;color:#0a0a0a;border:none;padding:16px;border-radius:6px;cursor:pointer;touch-action:manipulation;margin-top:4px;}
 .btn-submit-vote:disabled{opacity:0.4;cursor:not-allowed;}
-
 #handoff-screen{background:#0a0a0a;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;}
-.handoff-icon{font-size:56px;color:#f5c842;margin-bottom:1rem;}
-.handoff-title{font-size:46px;color:#f0ece4;margin-bottom:0.5rem;}
-.handoff-sub{font-size:14px;color:rgba(240,236,228,0.45);margin-bottom:1.75rem;max-width:300px;line-height:1.6;}
-.tally-text{font-size:13px;color:rgba(240,236,228,0.3);margin-bottom:2rem;}
 .tally-text span{color:#f5c842;font-weight:600;}
 .vote-summary{background:#161616;border:1px solid rgba(240,236,228,0.08);border-radius:10px;padding:14px;margin-bottom:2rem;width:100%;max-width:340px;text-align:left;}
 .summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(240,236,228,0.06);}
 .summary-row:last-child{border-bottom:none;}
 .summary-name{font-size:14px;color:#f0ece4;}
 .summary-score{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#f5c842;}
-
 #results-screen{background:#0a0a0a;padding:1.5rem 1.25rem 3rem;align-items:center;}
 .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .confetti-piece{position:absolute;opacity:0;animation:confettiFall linear forwards;}
@@ -119,7 +107,6 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .results-inner{position:relative;z-index:1;width:100%;max-width:420px;}
 .winner-crown{font-size:44px;animation:pulse 1.2s ease-in-out infinite alternate;display:block;text-align:center;}
 @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.15);}}
-.winner-label{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,236,228,0.4);margin:0.5rem 0 0.25rem;text-align:center;}
 .winner-name-big{font-size:clamp(48px,14vw,72px);color:#f5c842;line-height:1;margin-bottom:0.25rem;text-align:center;font-family:'Bebas Neue',sans-serif;}
 .winner-avg{font-size:20px;color:rgba(240,236,228,0.5);margin-bottom:1rem;text-align:center;}
 .winner-avg span{color:#f5c842;font-size:26px;}
@@ -138,7 +125,6 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .lb-votes-ct{font-size:10px;color:rgba(240,236,228,0.3);margin-top:1px;}
 .champ-tag{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;background:#f5c842;color:#0a0a0a;padding:3px 7px;border-radius:2px;font-weight:700;}
 .btn-reset{width:100%;background:transparent;color:rgba(240,236,228,0.35);border:1px solid rgba(240,236,228,0.1);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px;border-radius:6px;cursor:pointer;}
-
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#f5c842;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:12px 24px;border-radius:100px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
@@ -146,7 +132,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 <body>
 
 <div id="loading-screen" class="screen active">
-  <div><div class="spinner"></div><p style="color:rgba(240,236,228,0.4);font-size:14px;">Connecting...</p></div>
+  <div><div class="spinner"></div><p style="color:rgba(240,236,228,0.4);font-size:14px;">Loading...</p></div>
 </div>
 
 <div id="intro-screen" class="screen">
@@ -156,7 +142,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <h1 class="intro-title bebas">Dem Boys<br><span>Fitness</span><br>Challenge</h1>
     <p class="intro-dates">Body Transformation · 6 Competitors</p>
     <div class="fire-row">🔥💪🔥</div>
-    <button class="btn-cta" onclick="goTo('voter-screen');loadVoterScreen()">Begin Voting</button>
+    <button class="btn-cta" onclick="goVoter()">Begin Voting</button>
     <span class="admin-link" onclick="goTo('organizer-login-screen')">Organizer Login</span>
   </div>
 </div>
@@ -188,13 +174,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       <button onclick="goTo('intro-screen')" style="background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.4);font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;">Sign Out</button>
     </div>
     <div class="admin-actions">
-      <button class="admin-action-btn" onclick="goTo('voter-screen');loadVoterScreen()">🗳 Voting App</button>
+      <button class="admin-action-btn" onclick="goVoter()">🗳 Voting App</button>
       <button class="admin-action-btn gold" onclick="orgRevealResults()">🏆 Reveal Winner</button>
     </div>
     <div class="progress-card">
-      <span class="section-label">Live Vote Progress</span>
+      <span class="section-label">Vote Progress</span>
       <div id="admin-vote-progress"></div>
-      <button onclick="refreshAdminProgress()" style="margin-top:10px;background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.35);font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;">↻ Refresh Progress</button>
+      <button onclick="refreshAdmin()" style="margin-top:10px;background:transparent;border:1px solid rgba(240,236,228,0.1);color:rgba(240,236,228,0.35);font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;">↻ Refresh</button>
     </div>
     <span class="section-label">Competitor Photos</span>
     <div id="admin-list"></div>
@@ -206,7 +192,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   <div style="padding:1.5rem 1.25rem;">
     <h2 class="screen-title bebas">Who Are You?</h2>
     <p class="screen-sub">Pick your name — votes are anonymous</p>
-    <p class="voter-tally" id="voter-tally"><span id="tally-num">0</span> of 6 voters done</p>
+    <p class="voter-tally"><span id="tally-num">0</span> of 6 voters done</p>
     <div class="voter-grid" id="voter-grid"></div>
     <button class="btn-confirm" id="voter-confirm-btn" disabled onclick="startVoting()">Lock In &amp; Start Voting</button>
     <div class="org-section">
@@ -242,19 +228,21 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 </div>
 
 <div id="handoff-screen" class="screen">
-  <div style="font-size:56px;color:#f5c842;margin-bottom:1rem;text-align:center;">✅</div>
-  <h2 class="handoff-title bebas" style="text-align:center;">Votes Locked!</h2>
-  <p class="handoff-sub" style="text-align:center;margin:0 auto 1.75rem;">Scores saved! Anyone else can vote on their own device.</p>
-  <p class="tally-text" id="tally-text" style="text-align:center;"></p>
-  <div class="vote-summary" id="vote-summary" style="margin:0 auto 2rem;"></div>
-  <div style="text-align:center;"><button class="btn-cta" onclick="goTo('intro-screen')">Back to Home</button></div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:2rem 1.5rem;text-align:center;">
+    <div style="font-size:56px;color:#f5c842;margin-bottom:1rem;">✅</div>
+    <h2 class="bebas" style="font-size:46px;margin-bottom:0.5rem;">Votes Locked!</h2>
+    <p style="font-size:14px;color:rgba(240,236,228,0.45);margin-bottom:1.75rem;max-width:300px;line-height:1.6;">Scores saved! Anyone else can vote on their own device.</p>
+    <p class="tally-text" id="tally-text" style="font-size:13px;color:rgba(240,236,228,0.3);margin-bottom:2rem;"></p>
+    <div class="vote-summary" id="vote-summary"></div>
+    <button class="btn-cta" onclick="goTo('intro-screen')">Back to Home</button>
+  </div>
 </div>
 
 <div id="results-screen" class="screen">
   <div class="confetti-wrap" id="confetti-wrap"></div>
   <div class="results-inner">
     <span class="winner-crown">🏆</span>
-    <p class="winner-label bebas">Champion</p>
+    <p class="bebas" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,236,228,0.4);margin:0.5rem 0 0.25rem;text-align:center;">Champion</p>
     <h2 class="winner-name-big" id="winner-name">—</h2>
     <p class="winner-avg">Avg Score: <span id="winner-score">—</span></p>
     <div class="celeb-banner">
@@ -269,23 +257,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 <div class="toast" id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDrvOC9iO95jtZVKsV_NO7HuXec1xtDqK0",
-  authDomain: "dem-boys-challenge.firebaseapp.com",
-  projectId: "dem-boys-challenge",
-  storageBucket: "dem-boys-challenge.firebasestorage.app",
-  messagingSenderId: "1036534850226",
-  appId: "1:1036534850226:web:14a2df65677c33a69c9fab"
-};
-
-const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
-const storage = getStorage(fbApp);
+<script>
+// ── CONFIG ──
+// Using JSONBin.io as a free, no-rules backend (no Firebase permissions needed)
+// Replace MASTER_KEY and BIN_ID after creating your free account at jsonbin.io
+const JSONBIN_MASTER_KEY = '$2a$10$KtF8eiJB5Q4ZnD0RzPuiv.ndWjQ.80WjRjeyMk6gIiSw.Qp4xfP7i';
+const VOTES_BIN_ID   = '6a0fac50ee5a733b12fc06cb';
+const PHOTOS_BIN_ID  = '6a0faca3ee5a733b12fc0901';
 
 const COMPETITORS = ['Ram','Wuttke','Kiska','Bhav','Virgil','Soss'];
 const VOTERS = ['Christina','Grace','Brigith','Somby','Astha','Prachi'];
@@ -295,310 +273,309 @@ const ORGANIZER_PIN = '0423';
 let currentVoter = null;
 let currentCompIdx = 0;
 let localVotes = {};
-let cachedPhotos = {};
 let cachedVotes = {};
+let cachedPhotos = {};
 
-/* ── UTILS ── */
-window.goTo = id => {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+// ── UTILS ──
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-};
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  window.scrollTo(0,0);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+function updateSlider(val){
+  const v=parseFloat(val);
+  document.getElementById('rating-display').textContent=v.toFixed(1);
+  const pct=(v-1)/9*100;
+  document.getElementById('score-slider').style.background=
+    `linear-gradient(to right,#f5c842 ${pct}%,rgba(240,236,228,0.12) ${pct}%)`;
 }
 
-window.updateSlider = val => {
-  const v = parseFloat(val);
-  document.getElementById('rating-display').textContent = v.toFixed(1);
-  const pct = (v - 1) / 9 * 100;
-  document.getElementById('score-slider').style.background =
-    `linear-gradient(to right,#f5c842 ${pct}%,rgba(240,236,228,0.12) ${pct}%)`;
-};
+// ── JSONBIN API ──
+async function binGet(binId){
+  const r=await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`,{
+    headers:{'X-Master-Key':JSONBIN_MASTER_KEY}
+  });
+  const j=await r.json();
+  return j.record;
+}
+async function binSet(binId,data){
+  await fetch(`https://api.jsonbin.io/v3/b/${binId}`,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY},
+    body:JSON.stringify(data)
+  });
+}
 
-/* ── FIREBASE READS (simple getDoc, no listeners) ── */
-async function fetchVotes() {
-  try {
-    const snap = await getDoc(doc(db, 'challenge', 'votes'));
-    cachedVotes = snap.exists() ? snap.data() : {};
-  } catch(e) {
-    console.warn('fetchVotes error', e);
-    cachedVotes = {};
-  }
+async function fetchVotes(){
+  try{ cachedVotes=await binGet(VOTES_BIN_ID)||{}; }
+  catch(e){ console.warn('fetchVotes',e); cachedVotes={}; }
   return cachedVotes;
 }
-
-async function fetchPhotos() {
-  try {
-    const snap = await getDoc(doc(db, 'challenge', 'photos'));
-    cachedPhotos = snap.exists() ? snap.data() : {};
-  } catch(e) {
-    console.warn('fetchPhotos error', e);
-    cachedPhotos = {};
-  }
+async function fetchPhotos(){
+  try{ cachedPhotos=await binGet(PHOTOS_BIN_ID)||{}; }
+  catch(e){ console.warn('fetchPhotos',e); cachedPhotos={}; }
   return cachedPhotos;
 }
-
-async function saveVotes(voter, votesObj) {
-  const all = await fetchVotes();
-  all[voter] = votesObj;
-  await setDoc(doc(db, 'challenge', 'votes'), all);
+async function saveVoterVotes(voter,votesObj){
+  const all=await fetchVotes();
+  all[voter]=votesObj;
+  await binSet(VOTES_BIN_ID,all);
 }
 
-/* ── INIT ── */
-async function init() {
-  try {
-    await Promise.all([fetchVotes(), fetchPhotos()]);
-  } catch(e) {
-    console.warn('init error:', e);
+// ── INIT ──
+async function init(){
+  // Check if bins are configured
+  if(JSONBIN_MASTER_KEY.includes('PLACEHOLDER')){
+    goTo('intro-screen');
+    return;
   }
+  try{
+    await Promise.all([fetchVotes(),fetchPhotos()]);
+  }catch(e){ console.warn('init',e); }
   buildAdminList();
   goTo('intro-screen');
 }
 
-/* ── VOTER SCREEN ── */
-window.loadVoterScreen = async () => {
+// ── VOTER SCREEN ──
+async function goVoter(){
+  goTo('loading-screen');
   await fetchVotes();
+  await fetchPhotos();
   renderVoterGrid();
-};
+  goTo('voter-screen');
+}
+window.goVoter=goVoter;
 
-function renderVoterGrid() {
-  const grid = document.getElementById('voter-grid');
-  grid.innerHTML = '';
-  const doneCount = Object.keys(cachedVotes).length;
-  document.getElementById('tally-num').textContent = doneCount;
-  currentVoter = null;
-  document.getElementById('voter-confirm-btn').disabled = true;
-
-  VOTERS.forEach(v => {
-    const done = cachedVotes[v] !== undefined;
-    const btn = document.createElement('button');
-    btn.className = 'voter-btn' + (done ? ' voted' : '');
-    btn.innerHTML = done
-      ? `${v}<br><span style="font-size:10px;opacity:0.6;">✓ voted</span>`
-      : v;
-    btn.onclick = () => {
-      if (done) { showToast(v + ' already voted!'); return; }
-      document.querySelectorAll('.voter-btn').forEach(b => b.classList.remove('selected'));
+function renderVoterGrid(){
+  const grid=document.getElementById('voter-grid');
+  grid.innerHTML='';
+  const done=Object.keys(cachedVotes).length;
+  document.getElementById('tally-num').textContent=done;
+  currentVoter=null;
+  document.getElementById('voter-confirm-btn').disabled=true;
+  VOTERS.forEach(v=>{
+    const voted=cachedVotes[v]!==undefined;
+    const btn=document.createElement('button');
+    btn.className='voter-btn'+(voted?' voted':'');
+    btn.innerHTML=voted?`${v}<br><span style="font-size:10px;opacity:0.6;">✓ voted</span>`:v;
+    btn.onclick=()=>{
+      if(voted){showToast(v+' already voted!');return;}
+      document.querySelectorAll('.voter-btn').forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
-      currentVoter = v;
-      document.getElementById('voter-confirm-btn').disabled = false;
+      currentVoter=v;
+      document.getElementById('voter-confirm-btn').disabled=false;
     };
     grid.appendChild(btn);
   });
 }
 
-/* ── START VOTING ── */
-window.startVoting = async () => {
-  if (!currentVoter) return;
-  // re-fetch to guard against double voting
+// ── START VOTING ──
+async function startVoting(){
+  if(!currentVoter)return;
+  goTo('loading-screen');
   await fetchVotes();
-  if (cachedVotes[currentVoter]) {
-    showToast(currentVoter + ' has already voted!');
+  if(cachedVotes[currentVoter]){
+    showToast(currentVoter+' already voted!');
     renderVoterGrid();
+    goTo('voter-screen');
     return;
   }
-  await fetchPhotos();
-  localVotes = {};
-  currentCompIdx = 0;
+  localVotes={};
+  currentCompIdx=0;
   loadCompetitor();
   goTo('vote-screen');
-};
+}
+window.startVoting=startVoting;
 
-/* ── COMPETITOR ── */
-function loadCompetitor() {
-  const comp = COMPETITORS[currentCompIdx];
-  document.getElementById('comp-idx').textContent = currentCompIdx + 1;
-  document.getElementById('comp-name').textContent = comp;
-  document.getElementById('progress-fill').style.width = (currentCompIdx / 6 * 100) + '%';
-  const slider = document.getElementById('score-slider');
-  slider.value = 5;
+// ── COMPETITOR ──
+function loadCompetitor(){
+  const comp=COMPETITORS[currentCompIdx];
+  document.getElementById('comp-idx').textContent=currentCompIdx+1;
+  document.getElementById('comp-name').textContent=comp;
+  document.getElementById('progress-fill').style.width=(currentCompIdx/6*100)+'%';
+  document.getElementById('score-slider').value=5;
   updateSlider(5);
-
-  const grid = document.getElementById('photos-grid');
-  grid.innerHTML = '';
-  ['before', 'after'].forEach(type => {
-    const card = document.createElement('div');
-    card.className = 'photo-card';
-    const url = cachedPhotos[comp] && cachedPhotos[comp][type];
-    if (url) {
-      const img = document.createElement('img');
-      img.src = url;
+  const grid=document.getElementById('photos-grid');
+  grid.innerHTML='';
+  ['before','after'].forEach(type=>{
+    const card=document.createElement('div');
+    card.className='photo-card';
+    const url=cachedPhotos[comp]&&cachedPhotos[comp][type];
+    if(url){
+      const img=document.createElement('img');
+      img.src=url;
       card.appendChild(img);
-    } else {
-      const ph = document.createElement('div');
-      ph.className = 'photo-placeholder';
-      ph.innerHTML = `<span style="font-size:26px;opacity:0.3;">📷</span><span>${type === 'before' ? 'Before' : 'Current'}</span>`;
+    }else{
+      const ph=document.createElement('div');
+      ph.className='photo-placeholder';
+      ph.innerHTML=`<span style="font-size:26px;opacity:0.3;">📷</span><span>${type==='before'?'Before':'Current'}</span>`;
       card.appendChild(ph);
     }
-    const lbl = document.createElement('div');
-    lbl.className = 'photo-card-label';
-    lbl.textContent = type === 'before' ? 'Before' : 'Current';
+    const lbl=document.createElement('div');
+    lbl.className='photo-card-label';
+    lbl.textContent=type==='before'?'Before':'Current';
     card.appendChild(lbl);
     grid.appendChild(card);
   });
 }
 
-/* ── SUBMIT VOTE ── */
-window.submitVote = async () => {
-  const btn = document.getElementById('submit-vote-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
-
-  const comp = COMPETITORS[currentCompIdx];
-  const score = parseFloat(parseFloat(document.getElementById('score-slider').value).toFixed(1));
-  localVotes[comp] = score;
+// ── SUBMIT VOTE ──
+async function submitVote(){
+  const btn=document.getElementById('submit-vote-btn');
+  btn.disabled=true;
+  btn.textContent='Saving...';
+  const comp=COMPETITORS[currentCompIdx];
+  const score=parseFloat(parseFloat(document.getElementById('score-slider').value).toFixed(1));
+  localVotes[comp]=score;
   currentCompIdx++;
-
-  if (currentCompIdx < COMPETITORS.length) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Score →';
+  if(currentCompIdx<COMPETITORS.length){
+    btn.disabled=false;
+    btn.textContent='Submit Score →';
     loadCompetitor();
-    window.scrollTo(0, 0);
-  } else {
-    try {
-      await saveVotes(currentVoter, localVotes);
+    window.scrollTo(0,0);
+  }else{
+    try{
+      await saveVoterVotes(currentVoter,localVotes);
       await fetchVotes();
       showHandoff();
-    } catch (e) {
+    }catch(e){
       console.error(e);
-      showToast('Error saving. Please try again.');
-      btn.disabled = false;
-      btn.textContent = 'Submit Score →';
+      showToast('Error saving. Try again.');
+      btn.disabled=false;
+      btn.textContent='Submit Score →';
       currentCompIdx--;
     }
   }
-};
+}
+window.submitVote=submitVote;
 
-/* ── HANDOFF ── */
-function showHandoff() {
-  const done = Object.keys(cachedVotes).length;
-  document.getElementById('tally-text').innerHTML =
+// ── HANDOFF ──
+function showHandoff(){
+  const done=Object.keys(cachedVotes).length;
+  document.getElementById('tally-text').innerHTML=
     `<span>${done}</span> of <span>${VOTERS.length}</span> voters done`;
-  const summary = document.getElementById('vote-summary');
-  summary.innerHTML = '';
-  COMPETITORS.forEach(c => {
-    const row = document.createElement('div');
-    row.className = 'summary-row';
-    row.innerHTML = `<span class="summary-name">${c}</span><span class="summary-score">${(localVotes[c] || 0).toFixed(1)}</span>`;
+  const summary=document.getElementById('vote-summary');
+  summary.innerHTML='';
+  COMPETITORS.forEach(c=>{
+    const row=document.createElement('div');
+    row.className='summary-row';
+    row.innerHTML=`<span class="summary-name">${c}</span><span class="summary-score">${(localVotes[c]||0).toFixed(1)}</span>`;
     summary.appendChild(row);
   });
   goTo('handoff-screen');
 }
 
-/* ── ORGANIZER ── */
-window.orgLogin = () => {
-  const user = document.getElementById('org-username').value.trim();
-  const pin = document.getElementById('org-pin').value.trim();
-  const err = document.getElementById('org-error');
-  if (user === ORGANIZER_USERNAME && pin === ORGANIZER_PIN) {
-    err.style.display = 'none';
-    document.getElementById('org-username').value = '';
-    document.getElementById('org-pin').value = '';
-    openAdminDashboard();
-  } else {
-    err.style.display = 'block';
-    document.getElementById('org-pin').value = '';
+// ── ORGANIZER ──
+function orgLogin(){
+  const user=document.getElementById('org-username').value.trim();
+  const pin=document.getElementById('org-pin').value.trim();
+  const err=document.getElementById('org-error');
+  if(user===ORGANIZER_USERNAME&&pin===ORGANIZER_PIN){
+    err.style.display='none';
+    document.getElementById('org-username').value='';
+    document.getElementById('org-pin').value='';
+    openAdmin();
+  }else{
+    err.style.display='block';
+    document.getElementById('org-pin').value='';
   }
-};
+}
+window.orgLogin=orgLogin;
 
-async function openAdminDashboard() {
+async function openAdmin(){
+  goTo('loading-screen');
   await fetchVotes();
   renderAdminProgress();
+  buildAdminList();
   goTo('admin-screen');
 }
 
-function renderAdminProgress() {
-  const prog = document.getElementById('admin-vote-progress');
-  if (!prog) return;
-  prog.innerHTML = '';
-  VOTERS.forEach(v => {
-    const done = cachedVotes[v] !== undefined;
-    const row = document.createElement('div');
-    row.className = 'voter-progress-row';
-    row.innerHTML = `
-      <span style="font-size:14px;color:${done ? '#f0ece4' : 'rgba(240,236,228,0.4)'};">${v}</span>
-      <span style="font-size:12px;${done ? 'color:#f5c842;font-weight:600;' : 'color:rgba(240,236,228,0.25);'}">${done ? '✓ Voted' : 'Pending'}</span>`;
+function renderAdminProgress(){
+  const prog=document.getElementById('admin-vote-progress');
+  if(!prog)return;
+  prog.innerHTML='';
+  VOTERS.forEach(v=>{
+    const done=cachedVotes[v]!==undefined;
+    const row=document.createElement('div');
+    row.className='voter-progress-row';
+    row.innerHTML=`<span style="font-size:14px;color:${done?'#f0ece4':'rgba(240,236,228,0.4)'};">${v}</span>
+      <span style="font-size:12px;${done?'color:#f5c842;font-weight:600;':'color:rgba(240,236,228,0.25);'}">${done?'✓ Voted':'Pending'}</span>`;
     prog.appendChild(row);
   });
-  const total = Object.keys(cachedVotes).length;
-  prog.innerHTML += `
-    <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${total / VOTERS.length * 100}%"></div></div>
+  const total=Object.keys(cachedVotes).length;
+  prog.innerHTML+=`<div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${total/VOTERS.length*100}%"></div></div>
     <p style="font-size:11px;color:rgba(240,236,228,0.3);margin-top:5px;text-align:right;">${total} of ${VOTERS.length} voted</p>`;
 }
 
-window.refreshAdminProgress = async () => {
+async function refreshAdmin(){
   showToast('Refreshing...');
   await fetchVotes();
   renderAdminProgress();
-};
+}
+window.refreshAdmin=refreshAdmin;
 
-window.orgRevealResults = async () => {
+async function orgRevealResults(){
+  goTo('loading-screen');
   await fetchVotes();
-  const done = Object.keys(cachedVotes).length;
-  if (done === 0) { showToast('No votes yet!'); return; }
-  if (done < VOTERS.length) {
-    const go = confirm(`Only ${done} of ${VOTERS.length} voted. Reveal anyway?`);
-    if (!go) return;
+  const done=Object.keys(cachedVotes).length;
+  if(done===0){showToast('No votes yet!');goTo('admin-screen');return;}
+  if(done<VOTERS.length){
+    const go=confirm(`Only ${done} of ${VOTERS.length} voted. Reveal anyway?`);
+    if(!go){goTo('admin-screen');return;}
   }
   showResults();
-};
+}
+window.orgRevealResults=orgRevealResults;
 
-/* ── RESULTS ── */
-function showResults() {
-  const totals = {}, counts = {};
-  COMPETITORS.forEach(c => { totals[c] = 0; counts[c] = 0; });
-  Object.values(cachedVotes).forEach(vv => {
-    Object.entries(vv).forEach(([c, s]) => { totals[c] += s; counts[c]++; });
+// ── RESULTS ──
+function showResults(){
+  const totals={},counts={};
+  COMPETITORS.forEach(c=>{totals[c]=0;counts[c]=0;});
+  Object.values(cachedVotes).forEach(vv=>{
+    Object.entries(vv).forEach(([c,s])=>{totals[c]+=s;counts[c]++;});
   });
-  const ranked = COMPETITORS.map(c => ({
-    name: c,
-    avg: counts[c] > 0 ? parseFloat((totals[c] / counts[c]).toFixed(2)) : 0,
-    votes: counts[c]
-  })).sort((a, b) => b.avg - a.avg);
-
-  const winner = ranked[0];
-  document.getElementById('winner-name').textContent = winner.name;
-  document.getElementById('winner-score').textContent = winner.avg.toFixed(2);
-  document.getElementById('celeb-name').textContent = winner.name;
-
-  const lb = document.getElementById('leaderboard');
-  lb.innerHTML = '';
-  const medals = ['1st','2nd','3rd','4th','5th','6th'];
-  const rankCls = ['gold','silver','bronze','','',''];
-  ranked.forEach((item, i) => {
-    const row = document.createElement('div');
-    row.className = 'lb-row' + (i === 0 ? ' lb-winner' : '');
-    row.innerHTML = `
-      <span class="lb-rank ${rankCls[i]} bebas">${medals[i]}</span>
-      <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="lb-name bebas">${item.name}</span>
-          ${i === 0 ? '<span class="champ-tag">Champion</span>' : ''}
-        </div>
-        <div class="lb-votes-ct">${item.votes} vote${item.votes !== 1 ? 's' : ''}</div>
-      </div>
+  const ranked=COMPETITORS.map(c=>({
+    name:c,
+    avg:counts[c]>0?parseFloat((totals[c]/counts[c]).toFixed(2)):0,
+    votes:counts[c]
+  })).sort((a,b)=>b.avg-a.avg);
+  const winner=ranked[0];
+  document.getElementById('winner-name').textContent=winner.name;
+  document.getElementById('winner-score').textContent=winner.avg.toFixed(2);
+  document.getElementById('celeb-name').textContent=winner.name;
+  const lb=document.getElementById('leaderboard');
+  lb.innerHTML='';
+  const medals=['1st','2nd','3rd','4th','5th','6th'];
+  const rankCls=['gold','silver','bronze','','',''];
+  ranked.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='lb-row'+(i===0?' lb-winner':'');
+    row.innerHTML=`<span class="lb-rank ${rankCls[i]} bebas">${medals[i]}</span>
+      <div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;">
+        <span class="lb-name bebas">${item.name}</span>
+        ${i===0?'<span class="champ-tag">Champion</span>':''}
+      </div><div class="lb-votes-ct">${item.votes} vote${item.votes!==1?'s':''}</div></div>
       <span class="lb-score bebas">${item.avg.toFixed(1)}</span>`;
     lb.appendChild(row);
   });
-
   launchConfetti();
   goTo('results-screen');
 }
 
-function launchConfetti() {
-  const wrap = document.getElementById('confetti-wrap');
-  wrap.innerHTML = '';
-  const colors = ['#f5c842','#ff8c00','#fff','#ff4e50','#00d2ff'];
-  for (let i = 0; i < 80; i++) {
-    const p = document.createElement('div');
-    p.className = 'confetti-piece';
-    const size = Math.random() * 10 + 5;
-    p.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;
+function launchConfetti(){
+  const wrap=document.getElementById('confetti-wrap');
+  wrap.innerHTML='';
+  const colors=['#f5c842','#ff8c00','#fff','#ff4e50','#00d2ff'];
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    const size=Math.random()*10+5;
+    p.style.cssText=`left:${Math.random()*100}%;width:${size}px;height:${size}px;
       background:${colors[Math.floor(Math.random()*colors.length)]};
       border-radius:${Math.random()>0.5?'50%':'2px'};
       animation-duration:${Math.random()*2+2}s;animation-delay:${Math.random()*1.5}s;`;
@@ -606,71 +583,70 @@ function launchConfetti() {
   }
 }
 
-/* ── ADMIN PHOTOS ── */
-function buildAdminList() {
-  const list = document.getElementById('admin-list');
-  list.innerHTML = '';
-  COMPETITORS.forEach(comp => {
-    const card = document.createElement('div');
-    card.className = 'comp-admin-card';
-    card.innerHTML = `<div class="comp-admin-name">${comp}</div>
+// ── ADMIN PHOTOS ──
+function buildAdminList(){
+  const list=document.getElementById('admin-list');
+  if(!list)return;
+  list.innerHTML='';
+  COMPETITORS.forEach(comp=>{
+    const card=document.createElement('div');
+    card.className='comp-admin-card';
+    card.innerHTML=`<div class="comp-admin-name">${comp}</div>
       <div class="photo-upload-row">
-        ${['before','after'].map(type => `
+        ${['before','after'].map(type=>`
           <div class="photo-upload-slot" id="aslot-${comp}-${type}">
-            <input type="file" accept="image/*" onchange="adminUploadPhoto(this,'${comp}','${type}')">
+            <input type="file" accept="image/*" onchange="adminUpload(this,'${comp}','${type}')">
             <div class="slot-placeholder"><span style="font-size:24px;opacity:0.3;">📷</span><span>${type==='before'?'Before':'Current'}</span></div>
             <span class="slot-label-overlay">${type==='before'?'Before':'Current'}</span>
           </div>`).join('')}
       </div>`;
     list.appendChild(card);
-    ['before','after'].forEach(type => {
-      if (cachedPhotos[comp] && cachedPhotos[comp][type]) {
-        setAdminSlotImg(comp, type, cachedPhotos[comp][type]);
-      }
+    ['before','after'].forEach(type=>{
+      if(cachedPhotos[comp]&&cachedPhotos[comp][type])
+        setSlotImg(comp,type,cachedPhotos[comp][type]);
     });
   });
 }
 
-function setAdminSlotImg(comp, type, url) {
-  const slot = document.getElementById(`aslot-${comp}-${type}`);
-  if (!slot) return;
-  let img = slot.querySelector('img');
-  if (!img) { img = document.createElement('img'); slot.insertBefore(img, slot.firstChild); }
-  img.src = url;
-  const ph = slot.querySelector('.slot-placeholder');
-  if (ph) ph.style.display = 'none';
+function setSlotImg(comp,type,url){
+  const slot=document.getElementById(`aslot-${comp}-${type}`);
+  if(!slot)return;
+  let img=slot.querySelector('img');
+  if(!img){img=document.createElement('img');slot.insertBefore(img,slot.firstChild);}
+  img.src=url;
+  const ph=slot.querySelector('.slot-placeholder');
+  if(ph)ph.style.display='none';
 }
 
-window.adminUploadPhoto = async (input, comp, type) => {
-  if (!input.files || !input.files[0]) return;
-  const slot = document.getElementById(`aslot-${comp}-${type}`);
-  const ov = document.createElement('div');
-  ov.className = 'uploading-overlay';
-  ov.innerHTML = '<div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0;"></div><span>Uploading...</span>';
+async function adminUpload(input,comp,type){
+  if(!input.files||!input.files[0])return;
+  const slot=document.getElementById(`aslot-${comp}-${type}`);
+  const ov=document.createElement('div');
+  ov.className='uploading-overlay';
+  ov.innerHTML='<div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0;"></div><span>Uploading...</span>';
   slot.appendChild(ov);
-  const reader = new FileReader();
-  reader.onload = async e => {
-    try {
-      const storageRef = ref(storage, `photos/${comp}_${type}.jpg`);
-      await uploadString(storageRef, e.target.result, 'data_url');
-      const url = await getDownloadURL(storageRef);
-      const snap = await getDoc(doc(db, 'challenge', 'photos'));
-      const existing = snap.exists() ? snap.data() : {};
-      if (!existing[comp]) existing[comp] = {};
-      existing[comp][type] = url;
-      await setDoc(doc(db, 'challenge', 'photos'), existing);
-      cachedPhotos = existing;
-      setAdminSlotImg(comp, type, url);
-      showToast('✓ Photo uploaded!');
-    } catch (err) {
+
+  // Convert to base64 and store in photos bin
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    try{
+      const existing=await binGet(PHOTOS_BIN_ID)||{};
+      if(!existing[comp])existing[comp]={};
+      existing[comp][type]=e.target.result; // store as base64
+      await binSet(PHOTOS_BIN_ID,existing);
+      cachedPhotos=existing;
+      setSlotImg(comp,type,e.target.result);
+      showToast('✓ Photo saved!');
+    }catch(err){
       showToast('Upload failed. Try again.');
       console.error(err);
-    } finally {
+    }finally{
       ov.remove();
     }
   };
   reader.readAsDataURL(input.files[0]);
-};
+}
+window.adminUpload=adminUpload;
 
 init();
 </script>
